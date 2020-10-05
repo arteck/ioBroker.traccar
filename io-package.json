@@ -1,0 +1,120 @@
+ {
+	"common": {
+		"name": "traccar",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Traccar",
+		"titleLang": {
+			"en": "Traccar",
+			"de": "Traccar",
+			"ru": "Traccar",
+			"pt": "Traccar",
+			"nl": "Traccar",
+			"fr": "Traccar",
+			"it": "Traccar",
+			"es": "Traccar",
+			"pl": "Traccar",
+			"zh-cn": "特拉卡"
+		},
+		"desc": {
+			"en": "Open source GPS tracking system",
+			"de": "Open Source GPS Tracking System",
+			"ru": "Система отслеживания GPS с открытым исходным кодом",
+			"pt": "Sistema de rastreamento GPS de código aberto",
+			"nl": "Open source GPS-volgsysteem",
+			"fr": "Système de suivi GPS open source",
+			"it": "Sistema di localizzazione GPS open source",
+			"es": "Sistema de rastreo GPS de código abierto",
+			"pl": "System śledzenia GPS typu open source",
+			"zh-cn": "开源GPS跟踪系统"
+		},
+		"authors": [
+			"DutchmanNL <rdrozda86@gmail.com>"
+		],
+		"keywords": [
+			"traccar",
+			"gps",
+			"vehicle",
+			"car",
+			"iobroker"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "traccar.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/DutchmanNL/ioBroker.traccar/master/admin/traccar.png",
+		"readme": "https://github.com/DutchmanNL/ioBroker.traccar/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "vehicle",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "push",
+		"materialize": true,
+		"materializeTab": true,
+		"adminTab": {
+			"singleton": true,
+			"name": {
+				"en": "Traccar",
+				"de": "Traccar",
+				"ru": "Traccar",
+				"pt": "Traccar",
+				"nl": "Traccar",
+				"fr": "Traccar",
+				"it": "Traccar",
+				"es": "Traccar",
+				"pl": "Traccar",
+				"zh-cn": "特拉卡"
+			},
+			"link": "",
+			"fa-icon": "info"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
+}
