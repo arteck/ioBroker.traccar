@@ -6,7 +6,7 @@
         "name": "braindead1",
         "email": "os.braindead1@gmail.com"
     },
-    "homepage": "https://github.com/braindead1/ioBroker.traccar",
+    "homepage": "https://github.com/iobroker-community-adapters/ioBroker.traccar",
     "license": "MIT",
     "keywords": [
         "gps",
@@ -14,7 +14,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/braindead1/ioBroker.traccar"
+        "url": "https://github.com/iobroker-community-adapters/ioBroker.traccar"
     },
     "dependencies": {
         "@iobroker/adapter-core": "^2.4.0",
@@ -51,7 +51,7 @@
         "lint": "eslint"
     },
     "bugs": {
-        "url": "https://github.com/braindead1/ioBroker.traccar/issues"
+        "url": "https://github.com/iobroker-community-adapters/ioBroker.traccar/issues"
     },
     "readmeFilename": "README.md"
 }
