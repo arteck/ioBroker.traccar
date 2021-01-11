@@ -33,7 +33,7 @@ This adapter imports in real time the position and extended data on Traccar ioBr
 ## License
 MIT License
 
-Copyright (c) 2020 braindead1 <os.braindead1@gmail.com>
+Copyright (c) 2021 braindead1 <os.braindead1@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
