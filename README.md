@@ -17,15 +17,15 @@ This adapter imports in real time the position and extended data on Traccar ioBr
 ## Changelog
 
 ### 0.0.4
-* (IdleBit) add datapoint address (https://www.traccar.org/reverse-geocoding/)
+* (o0shojo0o) add datapoint address (https://www.traccar.org/reverse-geocoding/)
 
 ### 0.0.3
-* (IdleBit) workaround for unclean geofences in the database 
+* (o0shojo0o) workaround for unclean geofences in the database 
 
 ### 0.0.2
-* (IdleBit) add websoket connection
-* (IdleBit) add position url
-* (IdleBit) add dynamic datapoints for attributes  
+* (o0shojo0o) add websoket connection
+* (o0shojo0o) add position url
+* (o0shojo0o) add dynamic datapoints for attributes  
 
 ### 0.0.1
 * (braindead1) initial release
