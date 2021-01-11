@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * Created with @iobroker/create-adapter v1.29.1
+ * Created with @iobroker/create-adapter v1.27.0
  */
 
 // The adapter-core module gives you access to the core ioBroker functions
@@ -9,163 +9,376 @@
 const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
-// const fs = require("fs");
+const axios = require('axios').default;
+const WebSocket = require('ws');
+const defObj = require('./lib/object_definitions').defObj;
+
+let cookie;
+let ws;
+let devices;
+let positions;
+let geofences;
+let ping;
+let pingTimeout;
+const wsHeartbeatIntervall = 30000;
+const restartTimeout = 10000;
 
 class Traccar extends utils.Adapter {
 
-	/**
-	 * @param {Partial<utils.AdapterOptions>} [options={}]
-	 */
-	constructor(options) {
-		super({
-			...options,
-			name: 'traccar',
-		});
-		this.on('ready', this.onReady.bind(this));
-		this.on('stateChange', this.onStateChange.bind(this));
-		// this.on('objectChange', this.onObjectChange.bind(this));
-		// this.on('message', this.onMessage.bind(this));
-		this.on('unload', this.onUnload.bind(this));
-	}
+    /**
+     * @param {Partial<utils.AdapterOptions>} [options={}]
+     */
+    constructor(options) {
+        super({
+            ...options,
+            name: 'traccar',
+        });
 
-	/**
-	 * Is called when databases are connected and adapter received configuration.
-	 */
-	async onReady() {
-		// Initialize your adapter here
+        this.on('ready', this.onReady.bind(this));
+        this.on('unload', this.onUnload.bind(this));
+    }
 
-		// Reset the connection indicator during startup
-		this.setState('info.connection', false, true);
+    /**
+     * Is called when databases are connected and adapter received configuration.
+     */
+    async onReady() {
+        // Reset adapter connection
+        this.setState('info.connection', false, true);
 
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
-		this.log.info('config option1: ' + this.config.option1);
-		this.log.info('config option2: ' + this.config.option2);
+        // Log configuration
+        this.log.debug('Server IP: ' + this.config.traccarIp);
+        this.log.debug('Port: ' + this.config.traccarPort);
+        this.log.debug('Username: ' + this.config.traccarUsername);
+        this.log.debug('Password: ' + (this.config.traccarPassword !== '' ? '**********' : 'no password configured'));
+        //this.log.debug('Update interval: ' + this.config.updateInterval);
 
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
-		await this.setObjectNotExistsAsync('testVariable', {
-			type: 'state',
-			common: {
-				name: 'testVariable',
-				type: 'boolean',
-				role: 'indicator',
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
+        // Adapter is up and running
+        this.log.debug('Adapter is up and running');
+        // Get autuh cookie for websocket
+        try {
+            await this.authUser();
+            // Get initial traccar data over HTTP-API
+            await this.getTraccarDataOverAPI();
+            // Connect websocket
+            this.initWebsocket();
+        } catch (error) {
+            this.log.debug(error);
+            this.log.warn('Server is offline or the address is incorrect!');
+            this.autoRestart();
+            this.setState('info.connection', false, true);
+        }
 
-		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates('testVariable');
-		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-		// this.subscribeStates('lights.*');
-		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates('*');
+    }
 
-		/*
-			setState examples
-			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync('testVariable', true);
+    /**
+     * Is called when adapter shuts down - callback has to be called under any circumstances!
+     * @param {() => void} callback
+     */
+    async onUnload(callback) {
+        try {
+            // Reset adapter connection
+            this.setState('info.connection', false, true);
+            clearTimeout(ping);
+            clearTimeout(pingTimeout);
+            callback();
+        } catch (e) {
+            callback();
+        }
+    }
 
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync('testVariable', { val: true, ack: true });
+    /**
+     * Is called to update Traccar data
+     */
+    async authUser() {
+        const auth = `email=${this.config.traccarUsername}&password=${this.config.traccarPassword}`;
+        const axiosOptions = {
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
+        };
+        // Get Cookie
+        const resp = await axios.post('http://' + this.config.traccarIp + ':' + this.config.traccarPort + '/api/session', auth, axiosOptions);
+        cookie = resp.headers['set-cookie'][0];
 
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
+        this.log.debug('Auth succses, cookie: ' + cookie);
+    }
 
-		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync('admin', 'iobroker');
-		this.log.info('check user admin pw iobroker: ' + result);
+    async initWebsocket(){
+        // Set websocket connection
+        ws = new WebSocket('ws://' + this.config.traccarIp + ':' + this.config.traccarPort + '/api/socket',{ headers: {Cookie: cookie} });
 
-		result = await this.checkGroupAsync('admin', 'admin');
-		this.log.info('check group user admin group admin: ' + result);
-	}
+        // On connect
+        ws.on('open', ()=>{
+            this.log.debug('Websocket connectet');
+            // Set connection state
+            this.setState('info.connection', true, true);
+            this.log.info('Connect to server over websocket connection.');
+            // Send ping to server
+            this.sendPingToServer();
+            // Start Heartbeat
+            this.wsHeartbeat();
+        });
 
-	/**
-	 * Is called when adapter shuts down - callback has to be called under any circumstances!
-	 * @param {() => void} callback
-	 */
-	onUnload(callback) {
-		try {
-			// Here you must clear all timeouts or intervals that may still be active
-			// clearTimeout(timeout1);
-			// clearTimeout(timeout2);
-			// ...
-			// clearInterval(interval1);
+        // Incomming messages
+        ws.on('message', (message)=> {
+            this.log.debug('Incomming message: ' + message);
+            const obj = JSON.parse(message);
+            const objName = Object.keys(obj)[0];
 
-			callback();
-		} catch (e) {
-			callback();
-		}
-	}
+            // Position message
+            if (objName == 'positions') {
+                positions = obj.positions;
+            }
+            // Device message
+            else if (objName == 'devices'){
+                for (const key in obj.devices){
+                    const index =  devices.findIndex(x => x.id == obj.devices[key].id);
+                    devices[index] = obj.devices[key];
+                }
+            }
+            // Process new data
+            this.processData();
+        });
 
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
+        // On Close
+        ws.on('close', ()=>{
+            this.setState('info.connection', false, true);
+            this.log.warn('Websocket disconnectet');
+            clearTimeout(ping);
+            clearTimeout(pingTimeout);
 
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
-	}
+            if (ws.readyState === WebSocket.CLOSED) {
+                this.autoRestart();
+            }
+        });
 
-	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.message" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === 'object' && obj.message) {
-	// 		if (obj.command === 'send') {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info('send command');
+        // Pong from Server
+        ws.on('pong', ()=> {
+            this.log.debug('Receive pong from server');
+            this.wsHeartbeat();
+        });
+    }
 
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-	// 		}
-	// 	}
-	// }
+    async sendPingToServer(){
+        this.log.debug('Send ping to server');
+        ws.ping('iobroker.traccar');
+        ping = setTimeout(() => {
+            this.sendPingToServer();
+        }, wsHeartbeatIntervall);
+    }
 
+    async wsHeartbeat() {
+        clearTimeout(pingTimeout);
+        pingTimeout = setTimeout(() => {
+            this.log.debug('Websocked connection timed out');
+            ws.terminate();
+        }, wsHeartbeatIntervall + 1000);
+    }
+
+    async autoRestart(){
+        this.log.warn(`Start try again in ${restartTimeout / 1000} seconds...`);
+        setTimeout(() => {
+            this.onReady();
+        }, restartTimeout);
+    }
+
+    async processData() {
+        // Process devices
+        this.setObjectAndState('devices', 'devices');
+        for (const device of devices) {
+            const position = positions.find(p => p.id === device.positionId);
+            // Create static datapoins
+            this.setObjectAndState('devices.device', 'devices.' + device.id, device.name);
+            this.setObjectAndState('devices.device.device_name', 'devices.' + device.id + '.device_name', null, device.name);
+            this.setObjectAndState('devices.device.last_update', 'devices.' + device.id + '.last_update', null, device.lastUpdate);
+            this.setObjectAndState('devices.device.geofence_ids', 'devices.' + device.id + '.geofence_ids', null, JSON.stringify(device.geofenceIds));
+            this.setObjectAndState('devices.device.geofences', 'devices.' + device.id + '.geofences', null, JSON.stringify(this.getGeofencesState(device)));
+            this.setObjectAndState('devices.device.geofences_string', 'devices.' + device.id + '.geofences_string', null, this.getGeofencesState(device).join(', '));
+
+            // Check if a position was found
+            if (position){
+                // Create static datapoins
+                this.setObjectAndState('devices.device.altitude', 'devices.' + device.id + '.altitude', null, Number.parseFloat(position.altitude).toFixed(1));
+                this.setObjectAndState('devices.device.course', 'devices.' + device.id + '.course', null, position.course);
+                this.setObjectAndState('devices.device.latitude', 'devices.' + device.id + '.latitude', null, position.latitude);
+                this.setObjectAndState('devices.device.longitude', 'devices.' + device.id + '.longitude', null, position.longitude);
+                this.setObjectAndState('devices.device.position', 'devices.' + device.id + '.position', null, position.latitude + ',' + position.longitude);
+                this.setObjectAndState('devices.device.position_url', 'devices.' + device.id + '.position_url', null, 'http://maps.google.com/maps?z=15&t=m&q=loc:' + position.latitude + '+' + position.longitude);
+                this.setObjectAndState('devices.device.speed', 'devices.' + device.id + '.speed', null, Number(position.speed).toFixed());
+                // Address is optional
+                if (position.address){
+                    this.setObjectAndState('devices.device.address', 'devices.' + device.id + '.address', null, position.address);
+                }
+
+                // Create dynamic datapoints for attributes
+                this.log.debug('============= Process attributes start ================');
+                for (const key in position.attributes) {
+                    this.createObjectAndState(device, position.attributes, key);
+                }
+                this.log.debug('============== Process attributes end =================');
+            }
+        }
+
+        // Process geofences
+        this.setObjectAndState('geofences', 'geofences');
+        for (const geofence of geofences) {
+            // Create static datapoins
+            const geoDeviceState = this.getGeoDeviceState(geofence);
+            this.setObjectAndState('geofences.geofence', 'geofences.' + geofence.id, geofence.name);
+            this.setObjectAndState('geofences.geofence.geofence_name', 'geofences.' + geofence.id + '.geofence_name', null, geofence.name);
+            this.setObjectAndState('geofences.geofence.device_ids', 'geofences.' + geofence.id + '.device_ids', null, JSON.stringify(geoDeviceState[0]));
+            this.setObjectAndState('geofences.geofence.devices', 'geofences.' + geofence.id + '.devices', null, JSON.stringify(geoDeviceState[1]));
+            this.setObjectAndState('geofences.geofence.devices_string', 'geofences.' + geofence.id + '.devices_string', null, geoDeviceState[1].join(', '));
+        }
+    }
+
+    /**
+     * Is called to update Traccar data
+     */
+    async getTraccarDataOverAPI() {
+        const baseUrl = 'http://' + this.config.traccarIp + ':' + this.config.traccarPort + '/api';
+
+        const axiosOptions = {
+            auth: {
+                username: this.config.traccarUsername,
+                password: this.config.traccarPassword
+            }
+        };
+
+        const responses = await axios.all([
+            axios.get(baseUrl + '/devices', axiosOptions),
+            axios.get(baseUrl + '/positions', axiosOptions),
+            axios.get(baseUrl + '/geofences', axiosOptions)
+        ]);
+
+        for (const key in responses) {
+            this.log.debug(JSON.stringify(responses[key].data));
+        }
+
+        devices = responses[0].data;
+        positions = responses[1].data;
+        geofences = responses[2].data;
+
+        this.processData();
+    }
+
+    getGeofencesState(device){
+        const geofencesState = [];
+        for (const geofenceId of device.geofenceIds) {
+            const geofence = geofences.find(element => element.id === geofenceId);
+            // Workaround for unclean geofences in the database
+            if (geofence.name){
+                geofencesState.push(geofence.name);
+            }
+        }
+        return geofencesState;
+    }
+
+    getGeoDeviceState(geofence){
+        const deviceIdsState = [];
+        const devicesState = [];
+        for (const device of devices) {
+            if (device.geofenceIds.includes(geofence.id)) {
+                deviceIdsState.push(device.id);
+                devicesState.push(device.name);
+            }
+        }
+        return [deviceIdsState, devicesState];
+    }
+
+    async createObjectAndState(device, obj,  key){
+        let val = obj[key];
+        if (typeof val === 'object' && !Array.isArray(val)){
+            for (const objKey in val) {
+                const objVal = val[objKey];
+                const stateID  = 'devices.' + device.id + '.' + this.formatName(objKey);
+                const objID = 'devices.device.' + this.formatName(objKey);
+                this.log.debug('objID: ' + objID + ', ' + 'val: ' +  objVal);
+                this.setObjectAndState(objID, stateID, this.formatStateName(objKey), objVal);
+            }
+        }
+        else{
+            const stateID  = 'devices.' + device.id + '.' + this.formatName(key);
+            const objID = 'devices.device.' + this.formatName(key);
+            this.log.debug('objID: ' + objID + ', ' + 'val: ' +  val);
+            if (Array.isArray(val)){
+                val = JSON.stringify(val);
+            }
+            this.setObjectAndState(objID, stateID, this.formatStateName(key), val);
+        }
+    }
+    /**
+     * Is used to create and object and set the value
+     * @param {string} objectId
+     * @param {string} stateId
+     * @param {string | null} stateName
+     * @param {*} value
+     */
+    async setObjectAndState(objectId, stateId, stateName = null, value = null) {
+        let obj;
+
+        if (defObj[objectId]) {
+            obj = defObj[objectId];
+        }
+        else {
+            obj = {
+                type: 'state',
+                common: {
+                    name: stateName,
+                    type: 'mixed',
+                    role: 'state',
+                    read: true,
+                    write: true
+                },
+                native: {}
+            };
+        }
+
+        if (stateName !== null) {
+            obj.common.name = stateName;
+        }
+
+        await this.setObjectNotExistsAsync(stateId, {
+            type: obj.type,
+            common: JSON.parse(JSON.stringify(obj.common)),
+            native: JSON.parse(JSON.stringify(obj.native))
+        });
+
+        if (value !== null) {
+            await this.setStateChangedAsync(stateId, {
+                val: value,
+                ack: true
+            });
+        }
+    }
+
+    formatName(input){
+        const wordArray = input.split(/(?=[A-Z])/);
+        return wordArray.join('_').toLowerCase();
+    }
+
+    formatStateName(input){
+        const wordArray = input.split(/(?=[A-Z])/);
+        for (const key in wordArray) {
+            if (key === '0'){
+                wordArray[key] = wordArray[key][0].toUpperCase() + wordArray[key].substr(1);
+            }
+            else{
+                wordArray[key] = wordArray[key].toLowerCase();
+            }
+        }
+        return wordArray.join(' ');
+    }
 }
 
 // @ts-ignore parent is a valid property on module
 if (module.parent) {
-	// Export the constructor in compact mode
-	/**
-	 * @param {Partial<utils.AdapterOptions>} [options={}]
-	 */
-	module.exports = (options) => new Traccar(options);
+    // Export the constructor in compact mode
+    /**
+     * @param {Partial<utils.AdapterOptions>} [options={}]
+     */
+    module.exports = (options) => new Traccar(options);
 } else {
-	// otherwise start the instance directly
-	new Traccar();
+    // otherwise start the instance directly
+    new Traccar();
 }

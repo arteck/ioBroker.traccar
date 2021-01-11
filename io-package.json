@@ -1,120 +1,121 @@
- {
-	"common": {
-		"name": "traccar",
-		"version": "0.0.1",
-		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版"
-			}
-		},
-		"title": "Traccar",
-		"titleLang": {
-			"en": "Traccar",
-			"de": "Traccar",
-			"ru": "Traccar",
-			"pt": "Traccar",
-			"nl": "Traccar",
-			"fr": "Traccar",
-			"it": "Traccar",
-			"es": "Traccar",
-			"pl": "Traccar",
-			"zh-cn": "特拉卡"
-		},
-		"desc": {
-			"en": "Open source GPS tracking system",
-			"de": "Open Source GPS Tracking System",
-			"ru": "Система отслеживания GPS с открытым исходным кодом",
-			"pt": "Sistema de rastreamento GPS de código aberto",
-			"nl": "Open source GPS-volgsysteem",
-			"fr": "Système de suivi GPS open source",
-			"it": "Sistema di localizzazione GPS open source",
-			"es": "Sistema de rastreo GPS de código abierto",
-			"pl": "System śledzenia GPS typu open source",
-			"zh-cn": "开源GPS跟踪系统"
-		},
-		"authors": [
-			"DutchmanNL <rdrozda86@gmail.com>"
-		],
-		"keywords": [
-			"traccar",
-			"gps",
-			"vehicle",
-			"car",
-			"iobroker"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "traccar.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/DutchmanNL/ioBroker.traccar/master/admin/traccar.png",
-		"readme": "https://github.com/DutchmanNL/ioBroker.traccar/blob/master/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "vehicle",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "push",
-		"materialize": true,
-		"materializeTab": true,
-		"adminTab": {
-			"singleton": true,
-			"name": {
-				"en": "Traccar",
-				"de": "Traccar",
-				"ru": "Traccar",
-				"pt": "Traccar",
-				"nl": "Traccar",
-				"fr": "Traccar",
-				"it": "Traccar",
-				"es": "Traccar",
-				"pl": "Traccar",
-				"zh-cn": "特拉卡"
-			},
-			"link": "",
-			"fa-icon": "info"
-		},
-		"dependencies": [
-			{
-				"js-controller": ">=2.0.0"
-			}
-		]
-	},
-	"native": {
-		"option1": true,
-		"option2": "42"
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		}
-	]
+{
+    "common": {
+        "name": "traccar",
+        "version": "0.0.4",
+        "news": {
+            "0.0.4": {
+                "en": "add datapoint address",
+                "de": "Den Datenpunkt Adresse hinzufügen",
+                "ru": "добавить адрес точки привязки"
+            },
+            "0.0.3": {
+                "en": "workaround for unclean geofences in the database",
+                "de": "Workaround für unsaubere Geofences in der Datenbank",
+                "ru": "обходной путь для нечистых геозон в базе данных"
+            },
+            "0.0.2": {
+                "en": "add websoket connection\nadd position url\nadd dynamic datapoints for attributes",
+                "de": "Websoket-Verbindung hinzufügen\nPositionsurl hinzufügen\nDynamische Datenpunkte für Attribute hinzufügt",
+                "ru": "добавить веб-соединение\nурнал для добавления позиции\nдобавлять динамические точки отсчёта для атрибутов"
+            },
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Traccar",
+        "titleLang": {
+            "en": "Traccar",
+            "de": "Traccar",
+            "ru": "Traccar",
+            "pt": "Traccar",
+            "nl": "Traccar",
+            "fr": "Traccar",
+            "it": "Traccar",
+            "es": "Traccar",
+            "pl": "Traccar",
+            "zh-cn": "特拉卡"
+        },
+        "desc": {
+            "en": "Connects to a Traccar server to fetch geo positions of connected devices",
+            "de": "Stellt eine Verbindung zu einem Traccar-Server her, um Geopositionen verbundener Geräte abzurufen",
+            "ru": "Подключается к серверу Traccar для получения геолокации подключенных устройств",
+            "pt": "Conecta-se a um servidor Traccar para buscar posições geográficas de dispositivos conectados",
+            "nl": "Maakt verbinding met een Traccar-server om geografische posities van verbonden apparaten op te halen",
+            "fr": "Se connecte à un serveur Traccar pour récupérer les positions géographiques des appareils connectés",
+            "it": "Si collega a un server Traccar per recuperare le posizioni geografiche dei dispositivi collegati",
+            "es": "Se conecta a un servidor de Traccar para buscar posiciones geográficas de dispositivos conectados",
+            "pl": "Łączy się z serwerem Traccar, aby pobrać pozycje geograficzne podłączonych urządzeń",
+            "zh-cn": "连接到Traccar服务器以获取已连接设备的地理位置"
+        },
+        "authors": [
+            "braindead1 <os.braindead1@gmail.com>"
+        ],
+        "keywords": [
+            "gps",
+            "traccar"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "traccar.png",
+        "enabled": false,
+        "localLink": "http://%traccarIp%:%traccarPort%",
+        "extIcon": "https://raw.githubusercontent.com/braindead1/ioBroker.traccar/master/admin/traccar.png",
+        "readme": "https://github.com/braindead1/ioBroker.traccar/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "geoposition",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "materialize": true,
+        "dependencies": [{
+            "js-controller": ">=1.4.2"
+        }]
+    },
+    "native": {
+        "traccarIp": "",
+        "traccarPort": null,
+        "traccarUsername": "",
+        "traccarPassword": "",
+        "updateInterval": 120
+    },
+    "protectedNative": [
+        "traccarPassword"
+    ],
+    "encryptedNative": [
+        "traccarPassword"
+    ],
+    "objects": [],
+    "instanceObjects": [{
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }
