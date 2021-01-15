@@ -15,6 +15,16 @@
 This adapter imports in real time the position and the extended data from [Traccar](https://www.traccar.org) and makes them available in ioBroker.
 
 ## Changelog
+<!--
+ https://github.com/AlCalzone/release-script#usage
+    npm run release minor -- --all 0.9.8 -> 0.10.0
+    npm run release patch -- --all 0.9.8 -> 0.9.9
+    npm run release prerelease beta -- --all v0.2.1 -> v0.2.2-beta.0  
+	Placeholder for the next version (at the beginning of the line):
+	### __WORK IN PROGRESS__
+-->
+### __WORK IN PROGRESS__
+* (o0shojo0o) add [release-script](https://github.com/AlCalzone/release-script)
 
 ### 0.0.4
 * (o0shojo0o) add datapoint address (https://www.traccar.org/reverse-geocoding/)
