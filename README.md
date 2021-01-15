@@ -12,7 +12,7 @@
 
 ## Traccar adapter for ioBroker
 
-This adapter imports in real time the position and extended data on Traccar ioBroker.
+This adapter imports in real time the position and the extended data from [Traccar](https://www.traccar.org) and makes them available in ioBroker.
 
 ## Changelog
 
