@@ -1,12 +1,12 @@
 ![Logo](admin/traccar.png)
 # ioBroker.traccar
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.traccar.svg)](https://www.npmjs.com/package/iobroker.traccar)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.traccar.svg)](https://www.npmjs.com/package/iobroker.traccar)
-![Number of Installations (latest)](https://iobroker.live/badges/traccar-installed.svg)
-![Number of Installations (stable)](https://iobroker.live/badges/traccar-stable.svg)
-[![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.traccar.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.traccar)
-[![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.traccar/badge.svg)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.traccar)
+[![NPM version](http://img.shields.io/npm/v/iobroker.traccar.svg?dummy=unused)](https://www.npmjs.com/package/iobroker.traccar)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.traccar.svg?dummy=unused)](https://www.npmjs.com/package/iobroker.traccar)
+![Number of Installations (latest)](https://iobroker.live/badges/traccar-installed.svg?dummy=unused)
+![Number of Installations (stable)](https://iobroker.live/badges/traccar-stable.svg?dummy=unused)
+[![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.traccar.svg?dummy=unused)](https://david-dm.org/iobroker-community-adapters/iobroker.traccar)
+[![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.traccar/badge.svg?dummy=unused)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.traccar)
 
 [![NPM](https://nodei.co/npm/iobroker.traccar.png?downloads=true)](https://nodei.co/npm/iobroker.traccar/)
 
