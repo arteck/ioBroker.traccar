@@ -57,7 +57,8 @@
             "zh-cn": "连接到Traccar服务器以获取已连接设备的地理位置"
         },
         "authors": [
-            "braindead1 <os.braindead1@gmail.com>"
+            "braindead1 <os.braindead1@gmail.com>",
+            "Dennis Rathjen <info@bastelbunker.de>"
         ],
         "keywords": [
             "gps",
