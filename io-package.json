@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "news": {
+            "0.0.5": {
+                "en": "add [release-script](https://github.com/AlCalzone/release-script)",
+                "de": "füge [Release-Skript] hinzu (https://github.com/AlCalzone/release-script)",
+                "ru": "добавить [релиз-скрипт] (https://github.com/AlCalzone/release-script)",
+                "pt": "adicionar [script de lançamento] (https://github.com/AlCalzone/release-script)",
+                "nl": "voeg [release-script] toe (https://github.com/AlCalzone/release-script)",
+                "fr": "ajouter [release-script] (https://github.com/AlCalzone/release-script)",
+                "it": "aggiungi [release-script] (https://github.com/AlCalzone/release-script)",
+                "es": "agregue [release-script] (https://github.com/AlCalzone/release-script)",
+                "pl": "dodaj [release-script] (https://github.com/AlCalzone/release-script)",
+                "zh-cn": "添加[发布脚本]（https://github.com/AlCalzone/release-script）"
+            },
             "0.0.4": {
                 "en": "add datapoint address",
                 "de": "Den Datenpunkt Adresse hinzufügen",
@@ -79,9 +91,11 @@
         "connectionType": "local",
         "dataSource": "push",
         "materialize": true,
-        "dependencies": [{
-            "js-controller": ">=1.4.2"
-        }]
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
     },
     "native": {
         "traccarIp": "",
@@ -97,7 +111,8 @@
         "traccarPassword"
     ],
     "objects": [],
-    "instanceObjects": [{
+    "instanceObjects": [
+        {
             "_id": "info",
             "type": "channel",
             "common": {

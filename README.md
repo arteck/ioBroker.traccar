@@ -23,7 +23,7 @@ This adapter imports in real time the position and the extended data from [Tracc
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.0.5 (2021-03-08)
 * (o0shojo0o) add [release-script](https://github.com/AlCalzone/release-script)
 
 ### 0.0.4
