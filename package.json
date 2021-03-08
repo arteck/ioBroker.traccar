@@ -3,8 +3,8 @@
     "version": "0.0.4",
     "description": "Connects to a Traccar server to fetch geo positions of connected devices",
     "author": {
-        "name": "braindead1",
-        "email": "os.braindead1@gmail.com"
+        "name": "Dennis Rathjen",
+        "email": "info@bastelbunker.de"
     },
     "homepage": "https://github.com/o0shojo0o/ioBroker.traccar",
     "license": "MIT",
