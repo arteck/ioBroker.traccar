@@ -20,6 +20,7 @@ let positions;
 let geofences;
 let ping;
 let pingTimeout;
+let autoRestartTimeout;
 const wsHeartbeatIntervall = 30000;
 const restartTimeout = 10000;
 
@@ -76,10 +77,11 @@ class Traccar extends utils.Adapter {
      */
     async onUnload(callback) {
         try {
+            this.clearTimeout(ping);
+            this.clearTimeout(pingTimeout);
+            this.clearTimeout(autoRestartTimeout);
             // Reset adapter connection
             this.setState('info.connection', false, true);
-            clearTimeout(ping);
-            clearTimeout(pingTimeout);
             callback();
         } catch (e) {
             callback();
@@ -177,7 +179,7 @@ class Traccar extends utils.Adapter {
 
     async autoRestart(){
         this.log.warn(`Start try again in ${restartTimeout / 1000} seconds...`);
-        setTimeout(() => {
+        autoRestartTimeout = setTimeout(() => {
             this.onReady();
         }, restartTimeout);
     }
@@ -213,7 +215,7 @@ class Traccar extends utils.Adapter {
                 // Create dynamic datapoints for attributes
                 this.log.debug('============= Process attributes start ================');
                 for (const key in position.attributes) {
-                    this.createObjectAndState(device, position.attributes, key);
+                    await this.createObjectAndState(device, position.attributes, key);
                 }
                 this.log.debug('============== Process attributes end =================');
             }

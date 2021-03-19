@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.5",
+        "version": "0.0.6",
         "news": {
+            "0.0.6": {
+                "en": "adjustments according to the adapter review",
+                "de": "Anpassungen gemäß Adapterüberprüfung",
+                "ru": "доработки по обзору адаптера",
+                "pt": "ajustes de acordo com a revisão do adaptador",
+                "nl": "aanpassingen volgens de adapter review",
+                "fr": "ajustements en fonction de l'examen de l'adaptateur",
+                "it": "regolazioni in base alla revisione dell'adattatore",
+                "es": "ajustes de acuerdo con la revisión del adaptador",
+                "pl": "regulacje zgodnie z przeglądem adaptera",
+                "zh-cn": "根据适配器检查进行调整"
+            },
             "0.0.5": {
                 "en": "add [release-script](https://github.com/AlCalzone/release-script)",
                 "de": "füge [Release-Skript] hinzu (https://github.com/AlCalzone/release-script)",
@@ -93,7 +105,12 @@
         "materialize": true,
         "dependencies": [
             {
-                "js-controller": ">=1.4.2"
+                "js-controller": ">=3.1.0"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=4.0.9"
             }
         ]
     },
