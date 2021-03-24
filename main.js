@@ -194,13 +194,14 @@ class Traccar extends utils.Adapter {
         for (const device of devices) {
             const position = positions.find(p => p.id === device.positionId);
             const stateBaseID = `devices.${device.id}`;
+            const geofencesState =  await this.getGeofencesState(device);
             // Create static datapoins
             this.setObjectAndState('devices.device', stateBaseID, device.name);
             this.setObjectAndState('devices.device.device_name', `${stateBaseID}.device_name`, null, device.name);
             this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
             this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
-            this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(this.getGeofencesState(device)));
-            this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, this.getGeofencesState(device).join(', '));
+            this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(geofencesState));
+            this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, geofencesState.join(', '));
 
             // Check if a position was found
             if (position){
