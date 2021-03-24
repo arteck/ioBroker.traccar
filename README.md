@@ -25,6 +25,7 @@ This adapter imports in real time the position and the extended data from [Tracc
 -->
 ### __WORK IN PROGRESS__
 * (o0shojo0o) bugfix special characters in password and username
+* (o0shojo0o) code refactor
 
 ### 0.0.6 (2021-03-19)
 * (o0shojo0o) adjustments according to the adapter review
