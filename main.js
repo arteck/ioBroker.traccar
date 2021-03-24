@@ -92,7 +92,7 @@ class Traccar extends utils.Adapter {
      * Is called to update Traccar data
      */
     async authUser() {
-        const auth = `email=${this.config.traccarUsername}&password=${this.config.traccarPassword}`;
+        const auth = `email=${encodeURIComponent(this.config.traccarUsername)}&password=${encodeURIComponent(this.config.traccarPassword)}`;
         const axiosOptions = {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded'
