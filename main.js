@@ -276,7 +276,7 @@ class Traccar extends utils.Adapter {
         for (const geofenceId of device.geofenceIds) {
             const geofence = geofences.find(element => element.id === geofenceId);
             // Workaround for unclean geofences in the database
-            if (!geofence && !geofence.name){
+            if (!geofence || !geofence.name){
                 await this.getTraccarDataOverAPI();
             }
             else{
