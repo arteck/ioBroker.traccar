@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.6",
+        "version": "0.0.7",
         "news": {
+            "0.0.7": {
+                "en": "bugfix special characters in password and username\ncode refactor\nbetter handling with new device or geolocation at runtime",
+                "de": "Bugfix Sonderzeichen in Passwort und Benutzername\nCode Refactor\nBessere Handhabung mit neuem Gerät oder Geolocation zur Laufzeit",
+                "ru": "исправление ошибок специальных символов в пароле и имени пользователя\nрефакторинг кода\nлучшая работа с новым устройством или геолокация во время выполнения",
+                "pt": "correção de bugs de caracteres especiais na senha e nome de usuário\nrefatorar código\nmelhor manuseio com novo dispositivo ou geolocalização em tempo de execução",
+                "nl": "bugfix speciale tekens in wachtwoord en gebruikersnaam\ncode refactor\nbetere afhandeling met nieuw apparaat of geolocatie tijdens runtime",
+                "fr": "correction de bogue caractères spéciaux dans le mot de passe et le nom d'utilisateur\nrefactor de code\nmeilleure gestion avec un nouvel appareil ou une géolocalisation au moment de l'exécution",
+                "it": "bugfix caratteri speciali in password e nome utente\ncodice refactor\nmigliore gestione con un nuovo dispositivo o geolocalizzazione in fase di esecuzione",
+                "es": "corrección de errores de caracteres especiales en contraseña y nombre de usuario\nrefactor de código\nmejor manejo con nuevo dispositivo o geolocalización en tiempo de ejecución",
+                "pl": "naprawa błędów znaków specjalnych w haśle i nazwie użytkownika\nrefaktoryzacja kodu\nlepsza obsługa z nowym urządzeniem lub geolokalizacją w czasie wykonywania",
+                "zh-cn": "错误修正密码和用户名中的特殊字符\n代码重构\n在运行时使用新设备或地理位置更好地处理"
+            },
             "0.0.6": {
                 "en": "adjustments according to the adapter review",
                 "de": "Anpassungen gemäß Adapterüberprüfung",
