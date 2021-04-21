@@ -42,17 +42,38 @@
             "0.0.4": {
                 "en": "add datapoint address",
                 "de": "Den Datenpunkt Adresse hinzufügen",
-                "ru": "добавить адрес точки привязки"
+                "ru": "добавить адрес точки привязки",
+                "pt": "adicionar endereço de ponto de dados",
+                "nl": "voeg datapunt adres toe",
+                "fr": "ajouter une adresse de point de données",
+                "it": "aggiungi indirizzo datapoint",
+                "es": "agregar la dirección del punto de datos",
+                "pl": "dodaj adres punktu danych",
+                "zh-cn": "添加数据点地址"
             },
             "0.0.3": {
                 "en": "workaround for unclean geofences in the database",
                 "de": "Workaround für unsaubere Geofences in der Datenbank",
-                "ru": "обходной путь для нечистых геозон в базе данных"
+                "ru": "обходной путь для нечистых геозон в базе данных",
+                "pt": "solução alternativa para cercas geográficas sujas no banco de dados",
+                "nl": "tijdelijke oplossing voor onreine geofences in de database",
+                "fr": "solution de contournement pour les clôtures géographiques sales dans la base de données",
+                "it": "soluzione alternativa per recinti virtuali non puliti nel database",
+                "es": "solución alternativa para geocercas sucias en la base de datos",
+                "pl": "obejście nieczystych stref geofence w bazie danych",
+                "zh-cn": "数据库中不干净的地理围栏的解决方法"
             },
             "0.0.2": {
                 "en": "add websoket connection\nadd position url\nadd dynamic datapoints for attributes",
                 "de": "Websoket-Verbindung hinzufügen\nPositionsurl hinzufügen\nDynamische Datenpunkte für Attribute hinzufügt",
-                "ru": "добавить веб-соединение\nурнал для добавления позиции\nдобавлять динамические точки отсчёта для атрибутов"
+                "ru": "добавить веб-соединение\nурнал для добавления позиции\nдобавлять динамические точки отсчёта для атрибутов",
+                "pt": "adicionar conexão websoket\n",
+                "nl": "websoket-verbinding toevoegen\n",
+                "fr": "ajouter une connexion websoket\n",
+                "it": "aggiungere la connessione websoket\n",
+                "es": "agregar conexión websoket\n",
+                "pl": "dodaj połączenie websoket\n",
+                "zh-cn": "添加websoket连接\n"
             },
             "0.0.1": {
                 "en": "initial release",
