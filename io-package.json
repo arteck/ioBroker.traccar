@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.7",
+        "version": "0.0.8",
         "news": {
+            "0.0.8": {
+                "en": "bugfix wrong value type\ngerman language update",
+                "de": "Bugfix falscher Werttyp\ndeutschsprachiges Update",
+                "ru": "исправление ошибки неправильного типа значения\nобновление немецкого языка",
+                "pt": "bug corrigido tipo de valor errado\natualização da língua alemã",
+                "nl": "bugfix verkeerde waarde type\nDuitse taalupdate",
+                "fr": "correction de bogue type de valeur incorrect\nmise à jour de la langue allemande",
+                "it": "bugfix tipo di valore errato\naggiornamento in lingua tedesca",
+                "es": "corrección de errores tipo de valor incorrecto\nactualización del idioma alemán",
+                "pl": "poprawka błędu zły typ wartości\naktualizacja języka niemieckiego",
+                "zh-cn": "错误修正错误的值类型\n德语更新"
+            },
             "0.0.7": {
                 "en": "bugfix special characters in password and username\ncode refactor\nbetter handling with new device or geolocation at runtime",
                 "de": "Bugfix Sonderzeichen in Passwort und Benutzername\nCode Refactor\nBessere Handhabung mit neuem Gerät oder Geolocation zur Laufzeit",
