@@ -206,13 +206,13 @@ class Traccar extends utils.Adapter {
             // Check if a position was found
             if (position){
                 // Create static datapoins
-                this.setObjectAndState('devices.device.altitude', `${stateBaseID}.altitude`, null, Number.parseFloat(position.altitude).toFixed(1));
+                this.setObjectAndState('devices.device.altitude', `${stateBaseID}.altitude`, null, Number(parseFloat(position.altitude).toFixed(1)));
                 this.setObjectAndState('devices.device.course', `${stateBaseID}.course`, null, position.course);
                 this.setObjectAndState('devices.device.latitude', `${stateBaseID}.latitude`, null, position.latitude);
                 this.setObjectAndState('devices.device.longitude', `${stateBaseID}.longitude`, null, position.longitude);
                 this.setObjectAndState('devices.device.position', `${stateBaseID}.position`, null, `${position.latitude},${position.longitude}`);
                 this.setObjectAndState('devices.device.position_url', `${stateBaseID}.position_url`, null, `https://maps.google.com/maps?z=15&t=m&q=loc:${position.latitude}+${position.longitude}`);
-                this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(position.speed).toFixed());
+                this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
                 // Address is optional
                 if (position.address){
                     this.setObjectAndState('devices.device.address', `${stateBaseID}.address`, null, position.address);
