@@ -187,7 +187,7 @@ class Traccar extends utils.Adapter {
             this.onReady();
         }, restartTimeout);
     }
-//test
+
     async processData() {
         // Process devices
         this.setObjectAndState('devices', 'devices');
