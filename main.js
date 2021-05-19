@@ -187,12 +187,12 @@ class Traccar extends utils.Adapter {
             this.onReady();
         }, restartTimeout);
     }
-
+//test
     async processData() {
         // Process devices
         this.setObjectAndState('devices', 'devices');
         for (const device of devices) {
-            const position = positions.find(p => p.id === device.positionId);
+            const position = positions.find(p => p.deviceId === device.id);
             const stateBaseID = `devices.${device.id}`;
             const geofencesState =  await this.getGeofencesState(device);
             // Create static datapoins

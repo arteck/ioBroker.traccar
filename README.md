@@ -35,6 +35,10 @@ This adapter imports in real time the position and the extended data from [Tracc
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (o0shojo0o) optimization of the link between device and incoming message
+
 ### 0.0.8 (2021-04-30)
 
 -   (o0shojo0o) bugfix wrong value type
