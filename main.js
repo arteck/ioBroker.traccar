@@ -226,6 +226,8 @@ class Traccar extends utils.Adapter {
                 this.log.debug('============== Process attributes end =================');
             }
         }
+        // Clean positions;
+        positions = [];
 
         // Process geofences
         this.setObjectAndState('geofences', 'geofences');
