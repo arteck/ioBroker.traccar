@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.8",
+        "version": "0.0.9",
         "news": {
+            "0.0.9": {
+                "en": "prevent unnecessary process attributes from being interrupted\noptimization of the link between device and incoming message",
+                "de": "Verhindern Sie, dass unnötige Prozessattribute unterbrochen werden\nOptimierung der Verbindung zwischen Gerät und eingehender Nachricht",
+                "ru": "предотвратить прерывание ненужных атрибутов процесса\nоптимизация связи между устройством и входящим сообщением",
+                "pt": "evitar que atributos de processo desnecessários sejam interrompidos\notimização da ligação entre o dispositivo e a mensagem recebida",
+                "nl": "voorkomen dat onnodige procesattributen worden onderbroken\noptimalisatie van de koppeling tussen apparaat en inkomend bericht",
+                "fr": "empêcher les attributs de processus inutiles d'être interrompus\noptimisation du lien entre l'appareil et le message entrant",
+                "it": "impedire che attributi di processo non necessari vengano interrotti\nottimizzazione del collegamento tra dispositivo e messaggio in arrivo",
+                "es": "evitar que se interrumpan los atributos del proceso innecesarios\noptimización del enlace entre el dispositivo y el mensaje entrante",
+                "pl": "zapobiegają przerywaniu niepotrzebnych atrybutów procesu\noptymalizacja połączenia między urządzeniem a wiadomością przychodzącą",
+                "zh-cn": "防止不必要的过程属性被中断\n优化设备和传入消息之间的链接"
+            },
             "0.0.8": {
                 "en": "bugfix wrong value type\ngerman language update",
                 "de": "Bugfix falscher Werttyp\ndeutschsprachiges Update",
