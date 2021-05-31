@@ -1,10 +1,10 @@
 {
     "Login": "Авторизоваться",
     "Network settings": "Настройки сети",
-    "Password": "пароль",
+    "Password": "Пароль",
     "Port": "Порт",
     "Server IP": "IP-адрес сервера",
-    "Update": "Обновить",
+    "Update": "Обновление",
     "Update interval": "Интервал обновления",
     "Username": "Имя пользователя"
 }
