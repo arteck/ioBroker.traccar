@@ -1,10 +1,8 @@
 {
-    "Login": "S'identifier",
-    "Network settings": "Paramètres réseau",
     "Password": "Mot de passe",
     "Port": "Port",
-    "Server IP": "IP du serveur",
-    "Update": "Mise à jour",
+    "Server adress": "L'adresse du serveur",
+    "Update": "Mettre à jour",
     "Update interval": "Intervalle de mise à jour",
     "Username": "Nom d'utilisateur"
 }

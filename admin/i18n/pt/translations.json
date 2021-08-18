@@ -1,9 +1,7 @@
 {
-    "Login": "Conecte-se",
-    "Network settings": "Configurações de rede",
     "Password": "Senha",
     "Port": "Porta",
-    "Server IP": "IP do servidor",
+    "Server adress": "Endereço do servidor",
     "Update": "Atualizar",
     "Update interval": "Intervalo de atualização",
     "Username": "Nome do usuário"

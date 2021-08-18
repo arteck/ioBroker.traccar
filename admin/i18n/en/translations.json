@@ -1,9 +1,7 @@
 {
-    "Login": "Login",
-    "Network settings": "Network settings",
     "Password": "Password",
     "Port": "Port",
-    "Server IP": "Server IP",
+    "Server adress": "Server adress",
     "Update": "Update",
     "Update interval": "Update interval",
     "Username": "Username"

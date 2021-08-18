@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.9",
+        "version": "0.0.10",
         "news": {
+            "0.0.10": {
+                "en": "change UI to JSONConfig",
+                "de": "Ändern Sie die Benutzeroberfläche in JSONConfig",
+                "ru": "изменить пользовательский интерфейс на JSONConfig",
+                "pt": "alterar a IU para JSONConfig",
+                "nl": "verander gebruikersinterface in JSONConfig",
+                "fr": "changer l'interface utilisateur en JSONConfig",
+                "it": "cambia l'interfaccia utente in JSONConfig",
+                "es": "cambiar la interfaz de usuario a JSONConfig",
+                "pl": "zmień interfejs użytkownika na JSONConfig",
+                "zh-cn": "将 UI 更改为 JSONConfig"
+            },
             "0.0.9": {
                 "en": "prevent unnecessary process attributes from being interrupted\noptimization of the link between device and incoming message",
                 "de": "Verhindern Sie, dass unnötige Prozessattribute unterbrochen werden\nOptimierung der Verbindung zwischen Gerät und eingehender Nachricht",
@@ -169,7 +181,10 @@
             {
                 "admin": ">=4.0.9"
             }
-        ]
+        ],
+        "adminUI": {
+            "config": "json"
+        }
     },
     "native": {
         "traccarIp": "",

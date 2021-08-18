@@ -1,9 +1,7 @@
 {
-    "Login": "Iniciar sesión",
-    "Network settings": "Configuración de la red",
-    "Password": "Contraseña",
+    "Password": "Clave",
     "Port": "Puerto",
-    "Server IP": "Servidor IP",
+    "Server adress": "Dirección de servidor",
     "Update": "Actualizar",
     "Update interval": "Intervalo de actualización",
     "Username": "Nombre de usuario"

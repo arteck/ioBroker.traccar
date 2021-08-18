@@ -1,10 +1,8 @@
 {
-    "Login": "Log in",
-    "Network settings": "Netwerkinstellingen",
     "Password": "Wachtwoord",
     "Port": "Haven",
-    "Server IP": "Server IP",
+    "Server adress": "Server adres",
     "Update": "Bijwerken",
     "Update interval": "Bijwerkingsonderbreking",
-    "Username": "Gebruikersnaam"
+    "Username": "gebruikersnaam"
 }

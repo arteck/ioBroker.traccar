@@ -1,10 +1,8 @@
 {
-    "Login": "Zaloguj sie",
-    "Network settings": "Ustawienia sieci",
     "Password": "Hasło",
     "Port": "Port",
-    "Server IP": "IP serwera",
+    "Server adress": "Adres serwera",
     "Update": "Aktualizacja",
-    "Update interval": "Częstotliwość aktualizacji",
-    "Username": "Nazwa Użytkownika"
+    "Update interval": "Interwał aktualizacji",
+    "Username": "Nazwa użytkownika"
 }
