@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "traccar",
-        "version": "0.0.10",
+        "version": "0.0.11",
         "news": {
+            "0.0.11": {
+                "en": "fix translation",
+                "de": "Übersetzung korrigieren",
+                "ru": "исправить перевод",
+                "pt": "corrigir tradução",
+                "nl": "vertaling repareren",
+                "fr": "corriger la traduction",
+                "it": "correggere la traduzione",
+                "es": "arreglar traducción",
+                "pl": "napraw tłumaczenie",
+                "zh-cn": "修复翻译"
+            },
             "0.0.10": {
                 "en": "change UI to JSONConfig",
                 "de": "Ändern Sie die Benutzeroberfläche in JSONConfig",
