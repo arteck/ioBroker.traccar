@@ -270,13 +270,15 @@ class Traccar extends utils.Adapter {
 
     async getGeofencesState(device) {
         const geofencesState = [];
-        for (const geofenceId of device.geofenceIds) {
-            const geofence = geofences.find((element) => element.id === geofenceId);
-            // Workaround for unclean geofences in the database
-            if (!geofence || !geofence.name) {
-                await this.getTraccarDataOverAPI();
-            } else {
-                geofencesState.push(geofence.name);
+        if (device && device.geofenceIds) {
+            for (const geofenceId of device.geofenceIds) {
+                const geofence = geofences.find((element) => element.id === geofenceId);
+                // Workaround for unclean geofences in the database
+                if (!geofence || !geofence.name) {
+                    await this.getTraccarDataOverAPI();
+                } else {
+                    geofencesState.push(geofence.name);
+                }
             }
         }
         return geofencesState;
@@ -286,9 +288,11 @@ class Traccar extends utils.Adapter {
         const deviceIdsState = [];
         const devicesState = [];
         for (const device of devices) {
-            if (device.geofenceIds.includes(geofence.id)) {
-                deviceIdsState.push(device.id);
-                devicesState.push(device.name);
+            if (device.geofenceIds) {
+                if (device.geofenceIds.includes(geofence.id)) {
+                    deviceIdsState.push(device.id);
+                    devicesState.push(device.name);
+                }
             }
         }
         return [deviceIdsState, devicesState];
