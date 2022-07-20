@@ -34,7 +34,8 @@ This adapter imports in real time the position and the extended data from [Tracc
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 0.0.12 (2022-07-20)
+
+### **WORK IN PROGRESS**
 
 -   (o0shojo0o) fix geofenceIds now nullable
 -   (o0shojo0o) add Device datapoint Status
