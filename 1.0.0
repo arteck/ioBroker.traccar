@@ -1,0 +1,13 @@
+
+> iobroker.traccar@0.0.12 release
+> release-script major -p iobroker license --all 0.9.8 -
+
+[1m[35mcheck:git[39m[22m git status ok [32m✔[39m
+[1m[36mcheck:package[39m[22m package.json ok [32m✔[39m
+[1m[33mcheck:changelog[39m[22m changelog ok [32m✔[39m
+[1m[31mcheck:iobroker[39m[22m io-package.json ok [32m✔[39m
+[1m[32mcheck:version[39m[22m Bumping version from 0.0.12 to 1.0.0
+[?25l[36m?[39m [1mIs this okay?[22m [2m...[22m 
+[36m>[39m [36m[4myes[24m[39m
+  no[2A[21G[2B[2K[F[2K[F[2K[1G[35m×[39m [1mIs this okay?[22m [2m·[22m 
+[?25h
