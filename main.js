@@ -98,9 +98,11 @@ class Traccar extends utils.Adapter {
         };
         // Get Cookie
         const resp = await axios.post(`http://${this.config.traccarIp}:${this.config.traccarPort}/api/session`, auth, axiosOptions);
-        cookie = resp.headers["set-cookie"][0];
 
-        this.log.debug("Auth succses, cookie: " + cookie);
+        if (resp && resp.headers && resp.headers["set-cookie"]) {
+            cookie = resp.headers["set-cookie"][0];
+            this.log.debug("Auth succses, cookie: " + cookie);
+        }
     }
 
     async initWebsocket() {
@@ -192,18 +194,15 @@ class Traccar extends utils.Adapter {
         for (const device of devices) {
             const position = positions.find((p) => p.deviceId === device.id);
             const stateBaseID = `devices.${device.id}`;
-            const geofencesState = await this.getGeofencesState(device);
             // Create static datapoins
             this.setObjectAndState("devices.device", stateBaseID, device.name);
             this.setObjectAndState("devices.device.device_name", `${stateBaseID}.device_name`, null, device.name);
             this.setObjectAndState("devices.device.status", `${stateBaseID}.status`, null, device.status);
             this.setObjectAndState("devices.device.last_update", `${stateBaseID}.last_update`, null, device.lastUpdate);
-            this.setObjectAndState("devices.device.geofence_ids", `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
-            this.setObjectAndState("devices.device.geofences", `${stateBaseID}.geofences`, null, JSON.stringify(geofencesState));
-            this.setObjectAndState("devices.device.geofences_string", `${stateBaseID}.geofences_string`, null, geofencesState.join(", "));
 
             // Check if a position was found
             if (position) {
+                const geofencesState = await this.getGeofencesState(position);
                 // Create static datapoins
                 this.setObjectAndState("devices.device.altitude", `${stateBaseID}.altitude`, null, Number(parseFloat(position.altitude).toFixed(1)));
                 this.setObjectAndState("devices.device.course", `${stateBaseID}.course`, null, position.course);
@@ -212,6 +211,9 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState("devices.device.position", `${stateBaseID}.position`, null, `${position.latitude},${position.longitude}`);
                 this.setObjectAndState("devices.device.position_url", `${stateBaseID}.position_url`, null, `https://maps.google.com/maps?z=15&t=m&q=loc:${position.latitude}+${position.longitude}`);
                 this.setObjectAndState("devices.device.speed", `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
+                this.setObjectAndState("devices.device.geofence_ids", `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
+                this.setObjectAndState("devices.device.geofences", `${stateBaseID}.geofences`, null, JSON.stringify(geofencesState));
+                this.setObjectAndState("devices.device.geofences_string", `${stateBaseID}.geofences_string`, null, geofencesState.join(", "));
                 // Address is optional
                 if (position.address) {
                     this.setObjectAndState("devices.device.address", `${stateBaseID}.address`, null, position.address);
@@ -268,10 +270,10 @@ class Traccar extends utils.Adapter {
         this.processData();
     }
 
-    async getGeofencesState(device) {
+    async getGeofencesState(position) {
         const geofencesState = [];
-        if (device && device.geofenceIds) {
-            for (const geofenceId of device.geofenceIds) {
+        if (position && position.geofenceIds) {
+            for (const geofenceId of position.geofenceIds) {
                 const geofence = geofences.find((element) => element.id === geofenceId);
                 // Workaround for unclean geofences in the database
                 if (!geofence || !geofence.name) {
