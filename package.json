@@ -1,6 +1,6 @@
 {
   "name": "iobroker.traccar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Connects to a Traccar server to fetch geo positions of connected devices",
   "author": {
     "name": "Dennis Rathjen",

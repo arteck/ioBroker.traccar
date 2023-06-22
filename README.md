@@ -35,6 +35,9 @@ This adapter imports in real time the position and the extended data from [Tracc
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 1.0.1 (2023-06-22)
+-   (o0shojo0o) fix deploy workflow
+
 ### 1.0.0 (2023-06-22)
 -   (o0shojo0o) fix for Traccar Server v5.8
 
