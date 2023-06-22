@@ -113,8 +113,37 @@
       "pl": "Łączy się z serwerem Traccar, aby pobrać pozycje geograficzne podłączonych urządzeń",
       "zh-cn": "连接到Traccar服务器以获取已连接设备的地理位置"
     },
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<1.0.0",
+            "newVersion>=1.0.0"
+          ]
+        },
+        "title": {
+          "en": "Important notice!",
+          "de": "Wichtiger Hinweis!",
+          "ru": "Важное замечание!",
+          "pt": "Notícia importante!",
+          "nl": "Belangrijke mededeling!",
+          "fr": "Avis important!",
+          "it": "Avviso IMPORTANTE!",
+          "es": "Noticia importante!",
+          "pl": "Ważna uwaga!",
+          "zh-cn": "重要通知!"
+        },
+        "text": {
+          "en": "This version requires at least firmware version 5.8 of the Traccar Server."
+        },
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ],
     "authors": [
-      "braindead1 <os.braindead1@gmail.com>",
       "Dennis Rathjen <info@bastelbunker.de>"
     ],
     "keywords": [

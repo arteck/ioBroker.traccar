@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -124,5 +124,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Skip build
-        run:
-          echo "Build skipped!"
+        run: echo "Build skipped!"

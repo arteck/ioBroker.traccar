@@ -98,9 +98,11 @@ class Traccar extends utils.Adapter {
         };
         // Get Cookie
         const resp = await axios.post(`http://${this.config.traccarIp}:${this.config.traccarPort}/api/session`, auth, axiosOptions);
-        cookie = resp.headers["set-cookie"][0];
 
-        this.log.debug("Auth succses, cookie: " + cookie);
+        if (resp && resp.headers && resp.headers["set-cookie"]) {
+            cookie = resp.headers["set-cookie"][0];
+            this.log.debug("Auth succses, cookie: " + cookie);
+        }
     }
 
     async initWebsocket() {
