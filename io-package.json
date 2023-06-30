@@ -118,10 +118,10 @@
     "messages": [
       {
         "condition": {
-          "operand": "and",
+          "operand": "or",
           "rules": [
-            "oldVersion<1.0.0",
-            "newVersion>=1.0.0"
+            "newVersion==1.0.0",
+            "newVersion==1.0.1"
           ]
         },
         "title": {
@@ -182,8 +182,9 @@
     }
   },
   "native": {
+    "traccarScheme": "http",
     "traccarIp": "",
-    "traccarPort": null,
+    "traccarPort": 80,
     "traccarUsername": "",
     "traccarPassword": "",
     "updateInterval": 120
