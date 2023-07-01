@@ -2,8 +2,22 @@
     "type": "panel",
     "i18n": true,
     "items": {
-        "traccarIp": {
+        "traccarScheme": {
             "newLine": true,
+            "type": "select",
+            "label": "Scheme",
+            "options": [
+                {
+                    "label": "HTTP",
+                    "value": "http"
+                },
+                {
+                    "label": "HTTPS",
+                    "value": "https"
+                }
+            ]
+        },
+        "traccarIp": {
             "type": "text",
             "label": "Server address",
             "sm": 12,
