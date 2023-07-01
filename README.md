@@ -35,7 +35,7 @@ This adapter imports in real time the position and the extended data from [Tracc
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.1.1 (2023-07-01)
 -   (o0shojo0o) fix translation
 
 ### 1.1.0 (2023-07-01)

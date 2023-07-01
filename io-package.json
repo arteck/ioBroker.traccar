@@ -1,240 +1,240 @@
 {
-    "common": {
-        "name": "traccar",
-        "version": "1.1.0",
-        "news": {
-            "1.1.0": {
-                "en": "support for https/wss connections\nfix for Traccar Server < v5.8",
-                "de": "unterstützung von https/wss-verbindungen\nfix für Traccar Server < v5.8",
-                "ru": "поддержка https/wss соединений\nисправить для Traccar Server < v5.8",
-                "pt": "suporte para conexões https/wss\ncorreção para Traccar Server < v5.8",
-                "nl": "_\nvertaling:",
-                "fr": "support pour les connexions https/wss\nfix pour Traccar Server  v5.8",
-                "it": "supporto per connessioni https/wss\ncorretto per Traccar Server < v5.8",
-                "es": "soporte para conexiones https/wss\nfijado para Traccar Server",
-                "pl": "obsługa połączeń https/ws\nrezultatem dla Traccar Server < v5.8",
-                "uk": "підтримка підключення https/ws\nвиправити для Traccar Server < v5.8",
-                "zh-cn": "支持网站/网络\nfix 托儿服务(< v5.8>)"
-            },
-            "1.0.1": {
-                "en": "fix deploy workflow",
-                "de": "fixer workflow",
-                "ru": "исправить развернутый рабочий процесс",
-                "pt": "corrigir o fluxo de trabalho de implantação",
-                "nl": "vertaling:",
-                "fr": "déploiement correct",
-                "it": "correzione del flusso di lavoro",
-                "es": "corriente de trabajo de despliegue fijo",
-                "pl": "obsługa",
-                "uk": "виправити розгортання робочого процесу",
-                "zh-cn": "f 部署工作流程"
-            },
-            "1.0.0": {
-                "en": "fix for Traccar Server v5.8",
-                "de": "fix für Traccar Server v5.8",
-                "ru": "фикс для Traccar Server v5.8",
-                "pt": "correção para Traccar Server v5.8",
-                "nl": "vertaling:",
-                "fr": "correction pour Traccar Server v5.8",
-                "it": "correzione per Traccar Server v5.8",
-                "es": "fijado para Traccar Server v5.8",
-                "pl": "zalecenia dla serwera Traccar v5.8",
-                "uk": "виправити для Traccar Server v5.8",
-                "zh-cn": "fix 追踪托儿所诉5.8"
-            },
-            "0.0.12": {
-                "en": "fix geofenceIds now nullable\nadd Device datapoint Status",
-                "de": "geofence beheben Ids jetzt nichtig\ndevice datapoint Status hinzufügen",
-                "ru": "исправить геозону Идс теперь nullable\nadd Device datapoint Статус",
-                "pt": "corrigir geofence Ids agora nullable\nadicionar Datapoint de dispositivo Status",
-                "nl": "geof. Identificatie nu\nvertaling:",
-                "fr": "geofence Ids now nullable\najouter le point de données du périphérique Statut",
-                "it": "correzione della geofenza Ids now nullable\naggiungere Datapoint del dispositivo Stato",
-                "es": "fijar geofence Ids now nullable\nañadir Datos de dispositivo Estado",
-                "pl": "naprawa Id nominable\ndatapoint Status",
-                "zh-cn": "f 固定地缘故 我现在宣布无效\n增加数据点",
-                "uk": "виправлено ідентифікатори геозон, які тепер обнуляються\nдодати стан точки даних пристрою"
-            },
-            "0.0.11": {
-                "en": "fix translation",
-                "de": "Übersetzung korrigieren",
-                "ru": "исправить перевод",
-                "pt": "corrigir tradução",
-                "nl": "vertaling repareren",
-                "fr": "corriger la traduction",
-                "it": "correggere la traduzione",
-                "es": "arreglar traducción",
-                "pl": "napraw tłumaczenie",
-                "zh-cn": "修复翻译",
-                "uk": "виправити переклад"
-            },
-            "0.0.10": {
-                "en": "change UI to JSONConfig",
-                "de": "Ändern Sie die Benutzeroberfläche in JSONConfig",
-                "ru": "изменить пользовательский интерфейс на JSONConfig",
-                "pt": "alterar a IU para JSONConfig",
-                "nl": "verander gebruikersinterface in JSONConfig",
-                "fr": "changer l'interface utilisateur en JSONConfig",
-                "it": "cambia l'interfaccia utente in JSONConfig",
-                "es": "cambiar la interfaz de usuario a JSONConfig",
-                "pl": "zmień interfejs użytkownika na JSONConfig",
-                "zh-cn": "将 UI 更改为 JSONConfig",
-                "uk": "змінити інтерфейс користувача на JSONConfig"
-            },
-            "0.0.9": {
-                "en": "prevent unnecessary process attributes from being interrupted\noptimization of the link between device and incoming message",
-                "de": "Verhindern Sie, dass unnötige Prozessattribute unterbrochen werden\nOptimierung der Verbindung zwischen Gerät und eingehender Nachricht",
-                "ru": "предотвратить прерывание ненужных атрибутов процесса\nоптимизация связи между устройством и входящим сообщением",
-                "pt": "evitar que atributos de processo desnecessários sejam interrompidos\notimização da ligação entre o dispositivo e a mensagem recebida",
-                "nl": "voorkomen dat onnodige procesattributen worden onderbroken\noptimalisatie van de koppeling tussen apparaat en inkomend bericht",
-                "fr": "empêcher les attributs de processus inutiles d'être interrompus\noptimisation du lien entre l'appareil et le message entrant",
-                "it": "impedire che attributi di processo non necessari vengano interrotti\nottimizzazione del collegamento tra dispositivo e messaggio in arrivo",
-                "es": "evitar que se interrumpan los atributos del proceso innecesarios\noptimización del enlace entre el dispositivo y el mensaje entrante",
-                "pl": "zapobiegają przerywaniu niepotrzebnych atrybutów procesu\noptymalizacja połączenia między urządzeniem a wiadomością przychodzącą",
-                "zh-cn": "防止不必要的过程属性被中断\n优化设备和传入消息之间的链接",
-                "uk": "запобігти перериванню непотрібних атрибутів процесу\nоптимізація зв'язку між пристроєм і вхідним повідомленням"
-            }
-        },
-        "title": "Traccar",
-        "titleLang": {
-            "en": "Traccar",
-            "de": "Traccar",
-            "ru": "Traccar",
-            "pt": "Traccar",
-            "nl": "Traccar",
-            "fr": "Traccar",
-            "it": "Traccar",
-            "es": "Traccar",
-            "pl": "Traccar",
-            "zh-cn": "特拉卡",
-            "uk": "Traccar"
-        },
-        "desc": {
-            "en": "Connects to a Traccar server to fetch geo positions of connected devices",
-            "de": "Stellt eine Verbindung zu einem Traccar-Server her, um Geopositionen verbundener Geräte abzurufen",
-            "ru": "Подключается к серверу Traccar для получения геолокации подключенных устройств",
-            "pt": "Conecta-se a um servidor Traccar para buscar posições geográficas de dispositivos conectados",
-            "nl": "Maakt verbinding met een Traccar-server om geografische posities van verbonden apparaten op te halen",
-            "fr": "Se connecte à un serveur Traccar pour récupérer les positions géographiques des appareils connectés",
-            "it": "Si collega a un server Traccar per recuperare le posizioni geografiche dei dispositivi collegati",
-            "es": "Se conecta a un servidor de Traccar para buscar posiciones geográficas de dispositivos conectados",
-            "pl": "Łączy się z serwerem Traccar, aby pobrać pozycje geograficzne podłączonych urządzeń",
-            "zh-cn": "连接到Traccar服务器以获取已连接设备的地理位置",
-            "uk": "Підключається до сервера Traccar для отримання геопозицій підключених пристроїв"
-        },
-        "messages": [
-            {
-                "condition": {
-                    "operand": "or",
-                    "rules": [
-                        "newVersion==1.0.0",
-                        "newVersion==1.0.1"
-                    ]
-                },
-                "title": {
-                    "en": "Important notice!",
-                    "de": "Wichtiger Hinweis!",
-                    "ru": "Важное замечание!",
-                    "pt": "Notícia importante!",
-                    "nl": "Belangrijke mededeling!",
-                    "fr": "Avis important!",
-                    "it": "Avviso IMPORTANTE!",
-                    "es": "Noticia importante!",
-                    "pl": "Ważna uwaga!",
-                    "zh-cn": "重要通知!",
-                    "uk": "Важливе повідомлення!"
-                },
-                "text": {
-                    "en": "This version requires at least firmware version 5.8 of the Traccar Server.",
-                    "de": "Diese Version erfordert mindestens Firmware-Version 5.8 des Traccar-Servers.",
-                    "ru": "Для этой версии требуется микропрограмма Traccar Server версии не ниже 5.8.",
-                    "pt": "Esta versão requer pelo menos a versão de firmware 5.8 do Traccar Server.",
-                    "nl": "Deze versie vereist minimaal firmwareversie 5.8 van de Traccar Server.",
-                    "fr": "Cette version nécessite au moins la version 5.8 du firmware du serveur Traccar.",
-                    "it": "Questa versione richiede almeno la versione firmware 5.8 del Traccar Server.",
-                    "es": "Esta versión requiere al menos la versión de firmware 5.8 del servidor Traccar.",
-                    "pl": "Ta wersja wymaga przynajmniej wersji firmware 5.8 Serwera Traccar.",
-                    "uk": "Ця версія вимагає принаймні версії мікропрограми 5.8 сервера Traccar.",
-                    "zh-cn": "此版本至少需要 Traccar 服务器固件版本 5.8。"
-                },
-                "buttons": [
-                    "agree",
-                    "cancel"
-                ]
-            }
-        ],
-        "authors": [
-            "Dennis Rathjen <info@bastelbunker.de>"
-        ],
-        "keywords": [
-            "gps",
-            "traccar"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "traccar.png",
-        "enabled": false,
-        "localLink": "http://%traccarIp%:%traccarPort%",
-        "extIcon": "https://raw.githubusercontent.com/o0shojo0o/ioBroker.traccar/master/admin/traccar.png",
-        "readme": "https://github.com/o0shojo0o/ioBroker.traccar/blob/master/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "geoposition",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "push",
-        "materialize": true,
-        "dependencies": [
-            {
-                "js-controller": ">=3.1.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=4.0.9"
-            }
-        ],
-        "adminUI": {
-            "config": "json"
-        }
+  "common": {
+    "name": "traccar",
+    "version": "1.1.1",
+    "news": {
+      "1.1.1": {
+        "en": "fix translation",
+        "de": "bersetzung",
+        "ru": "исправить перевод",
+        "pt": "corrigir a tradução",
+        "nl": "vertaling:",
+        "fr": "traduction correcte",
+        "it": "correzione della traduzione",
+        "es": "traducción",
+        "pl": "poprawić",
+        "uk": "фіксувати переклад",
+        "zh-cn": "fix 翻译"
+      },
+      "1.1.0": {
+        "en": "support for https/wss connections\nfix for Traccar Server < v5.8",
+        "de": "unterstützung von https/wss-verbindungen\nfix für Traccar Server < v5.8",
+        "ru": "поддержка https/wss соединений\nисправить для Traccar Server < v5.8",
+        "pt": "suporte para conexões https/wss\ncorreção para Traccar Server < v5.8",
+        "nl": "_\nvertaling:",
+        "fr": "support pour les connexions https/wss\nfix pour Traccar Server  v5.8",
+        "it": "supporto per connessioni https/wss\ncorretto per Traccar Server < v5.8",
+        "es": "soporte para conexiones https/wss\nfijado para Traccar Server",
+        "pl": "obsługa połączeń https/ws\nrezultatem dla Traccar Server < v5.8",
+        "uk": "підтримка підключення https/ws\nвиправити для Traccar Server < v5.8",
+        "zh-cn": "支持网站/网络\nfix 托儿服务(< v5.8>)"
+      },
+      "1.0.1": {
+        "en": "fix deploy workflow",
+        "de": "fixer workflow",
+        "ru": "исправить развернутый рабочий процесс",
+        "pt": "corrigir o fluxo de trabalho de implantação",
+        "nl": "vertaling:",
+        "fr": "déploiement correct",
+        "it": "correzione del flusso di lavoro",
+        "es": "corriente de trabajo de despliegue fijo",
+        "pl": "obsługa",
+        "uk": "виправити розгортання робочого процесу",
+        "zh-cn": "f 部署工作流程"
+      },
+      "1.0.0": {
+        "en": "fix for Traccar Server v5.8",
+        "de": "fix für Traccar Server v5.8",
+        "ru": "фикс для Traccar Server v5.8",
+        "pt": "correção para Traccar Server v5.8",
+        "nl": "vertaling:",
+        "fr": "correction pour Traccar Server v5.8",
+        "it": "correzione per Traccar Server v5.8",
+        "es": "fijado para Traccar Server v5.8",
+        "pl": "zalecenia dla serwera Traccar v5.8",
+        "uk": "виправити для Traccar Server v5.8",
+        "zh-cn": "fix 追踪托儿所诉5.8"
+      },
+      "0.0.12": {
+        "en": "fix geofenceIds now nullable\nadd Device datapoint Status",
+        "de": "geofence beheben Ids jetzt nichtig\ndevice datapoint Status hinzufügen",
+        "ru": "исправить геозону Идс теперь nullable\nadd Device datapoint Статус",
+        "pt": "corrigir geofence Ids agora nullable\nadicionar Datapoint de dispositivo Status",
+        "nl": "geof. Identificatie nu\nvertaling:",
+        "fr": "geofence Ids now nullable\najouter le point de données du périphérique Statut",
+        "it": "correzione della geofenza Ids now nullable\naggiungere Datapoint del dispositivo Stato",
+        "es": "fijar geofence Ids now nullable\nañadir Datos de dispositivo Estado",
+        "pl": "naprawa Id nominable\ndatapoint Status",
+        "zh-cn": "f 固定地缘故 我现在宣布无效\n增加数据点",
+        "uk": "виправлено ідентифікатори геозон, які тепер обнуляються\nдодати стан точки даних пристрою"
+      },
+      "0.0.11": {
+        "en": "fix translation",
+        "de": "Übersetzung korrigieren",
+        "ru": "исправить перевод",
+        "pt": "corrigir tradução",
+        "nl": "vertaling repareren",
+        "fr": "corriger la traduction",
+        "it": "correggere la traduzione",
+        "es": "arreglar traducción",
+        "pl": "napraw tłumaczenie",
+        "zh-cn": "修复翻译",
+        "uk": "виправити переклад"
+      },
+      "0.0.10": {
+        "en": "change UI to JSONConfig",
+        "de": "Ändern Sie die Benutzeroberfläche in JSONConfig",
+        "ru": "изменить пользовательский интерфейс на JSONConfig",
+        "pt": "alterar a IU para JSONConfig",
+        "nl": "verander gebruikersinterface in JSONConfig",
+        "fr": "changer l'interface utilisateur en JSONConfig",
+        "it": "cambia l'interfaccia utente in JSONConfig",
+        "es": "cambiar la interfaz de usuario a JSONConfig",
+        "pl": "zmień interfejs użytkownika na JSONConfig",
+        "zh-cn": "将 UI 更改为 JSONConfig",
+        "uk": "змінити інтерфейс користувача на JSONConfig"
+      }
     },
-    "native": {
-        "traccarScheme": "http",
-        "traccarIp": "",
-        "traccarPort": 80,
-        "traccarUsername": "",
-        "traccarPassword": "",
-        "updateInterval": 120
+    "title": "Traccar",
+    "titleLang": {
+      "en": "Traccar",
+      "de": "Traccar",
+      "ru": "Traccar",
+      "pt": "Traccar",
+      "nl": "Traccar",
+      "fr": "Traccar",
+      "it": "Traccar",
+      "es": "Traccar",
+      "pl": "Traccar",
+      "zh-cn": "特拉卡",
+      "uk": "Traccar"
     },
-    "protectedNative": [
-        "traccarPassword"
-    ],
-    "encryptedNative": [
-        "traccarPassword"
-    ],
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
+    "desc": {
+      "en": "Connects to a Traccar server to fetch geo positions of connected devices",
+      "de": "Stellt eine Verbindung zu einem Traccar-Server her, um Geopositionen verbundener Geräte abzurufen",
+      "ru": "Подключается к серверу Traccar для получения геолокации подключенных устройств",
+      "pt": "Conecta-se a um servidor Traccar para buscar posições geográficas de dispositivos conectados",
+      "nl": "Maakt verbinding met een Traccar-server om geografische posities van verbonden apparaten op te halen",
+      "fr": "Se connecte à un serveur Traccar pour récupérer les positions géographiques des appareils connectés",
+      "it": "Si collega a un server Traccar per recuperare le posizioni geografiche dei dispositivi collegati",
+      "es": "Se conecta a un servidor de Traccar para buscar posiciones geográficas de dispositivos conectados",
+      "pl": "Łączy się z serwerem Traccar, aby pobrać pozycje geograficzne podłączonych urządzeń",
+      "zh-cn": "连接到Traccar服务器以获取已连接设备的地理位置",
+      "uk": "Підключається до сервера Traccar для отримання геопозицій підключених пристроїв"
+    },
+    "messages": [
+      {
+        "condition": {
+          "operand": "or",
+          "rules": [
+            "newVersion==1.0.0",
+            "newVersion==1.0.1"
+          ]
         },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
-    ]
+        "title": {
+          "en": "Important notice!",
+          "de": "Wichtiger Hinweis!",
+          "ru": "Важное замечание!",
+          "pt": "Notícia importante!",
+          "nl": "Belangrijke mededeling!",
+          "fr": "Avis important!",
+          "it": "Avviso IMPORTANTE!",
+          "es": "Noticia importante!",
+          "pl": "Ważna uwaga!",
+          "zh-cn": "重要通知!",
+          "uk": "Важливе повідомлення!"
+        },
+        "text": {
+          "en": "This version requires at least firmware version 5.8 of the Traccar Server.",
+          "de": "Diese Version erfordert mindestens Firmware-Version 5.8 des Traccar-Servers.",
+          "ru": "Для этой версии требуется микропрограмма Traccar Server версии не ниже 5.8.",
+          "pt": "Esta versão requer pelo menos a versão de firmware 5.8 do Traccar Server.",
+          "nl": "Deze versie vereist minimaal firmwareversie 5.8 van de Traccar Server.",
+          "fr": "Cette version nécessite au moins la version 5.8 du firmware du serveur Traccar.",
+          "it": "Questa versione richiede almeno la versione firmware 5.8 del Traccar Server.",
+          "es": "Esta versión requiere al menos la versión de firmware 5.8 del servidor Traccar.",
+          "pl": "Ta wersja wymaga przynajmniej wersji firmware 5.8 Serwera Traccar.",
+          "uk": "Ця версія вимагає принаймні версії мікропрограми 5.8 сервера Traccar.",
+          "zh-cn": "此版本至少需要 Traccar 服务器固件版本 5.8。"
+        },
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ],
+    "authors": [
+      "Dennis Rathjen <info@bastelbunker.de>"
+    ],
+    "keywords": [
+      "gps",
+      "traccar"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "traccar.png",
+    "enabled": false,
+    "localLink": "http://%traccarIp%:%traccarPort%",
+    "extIcon": "https://raw.githubusercontent.com/o0shojo0o/ioBroker.traccar/master/admin/traccar.png",
+    "readme": "https://github.com/o0shojo0o/ioBroker.traccar/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "geoposition",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "materialize": true,
+    "dependencies": [
+      {
+        "js-controller": ">=3.1.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=4.0.9"
+      }
+    ],
+    "adminUI": {
+      "config": "json"
+    }
+  },
+  "native": {
+    "traccarScheme": "http",
+    "traccarIp": "",
+    "traccarPort": 80,
+    "traccarUsername": "",
+    "traccarPassword": "",
+    "updateInterval": 120
+  },
+  "protectedNative": [
+    "traccarPassword"
+  ],
+  "encryptedNative": [
+    "traccarPassword"
+  ],
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
