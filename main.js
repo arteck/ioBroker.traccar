@@ -201,10 +201,10 @@ class Traccar extends utils.Adapter {
             this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
             // Server < v5.8
             if (device.geofenceIds) {
-                const geofencesState = await this.getGeofencesState(device);
+                const deviceGeofencesState = await this.getGeofencesState(device.geofenceIds);
                 this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
-                this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(geofencesState));
-                this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, geofencesState.join(', '));
+                this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(deviceGeofencesState));
+                this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, deviceGeofencesState.join(', '));
             }
             // Check if a position was found
             if (position) {
@@ -218,10 +218,10 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
                 // Server >= v5.8
                 if (position.geofenceIds) {
-                    const geofencesState = await this.getGeofencesState(position);
+                    const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
                     this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
-                    this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(geofencesState));
-                    this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, geofencesState.join(', '));
+                    this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
+                    this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, positionGeofencesState.join(', '));
                 }
                 // Address is optional
                 if (position.address) {
@@ -279,10 +279,10 @@ class Traccar extends utils.Adapter {
         this.processData();
     }
 
-    async getGeofencesState(x) {
+    async getGeofencesState(geofenceIds) {
         const geofencesState = [];
-        if (x && x.geofenceIds) {
-            for (const geofenceId of x.geofenceIds) {
+        if (geofenceIds) {
+            for (const geofenceId of geofenceIds) {
                 const geofence = geofences.find((element) => element.id === geofenceId);
                 // Workaround for unclean geofences in the database
                 if (!geofence || !geofence.name) {
