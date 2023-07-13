@@ -310,7 +310,7 @@ class Traccar extends utils.Adapter {
             for (const position of positions) {
                 if (position.geofenceIds) {
                     if (position.geofenceIds.includes(geofence.id)) {
-                        deviceIdsState.push(position.id);
+                        deviceIdsState.push(deviceId);
                         let found = devices.find(({ id }) => id === position.deviceId);
                         devicesState.push(found.name);
                     }
