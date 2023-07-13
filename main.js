@@ -60,6 +60,7 @@ class Traccar extends utils.Adapter {
             await this.authUser();
             // Get initial traccar data over HTTP-API
             await this.getTraccarDataOverAPI();
+            this.processData();  // first try
             // Connect websocket
             this.initWebsocket();
         } catch (error) {
@@ -136,16 +137,16 @@ class Traccar extends utils.Adapter {
             else if (objName == 'devices') {
                 for (const key in obj.devices) {
                     const index = devices.findIndex((x) => x.id == obj.devices[key].id);
-                    if (index == -1) {
+                    if (index == -1) {9
                         await this.getTraccarDataOverAPI();
                         return;
                     }
                     devices[index] = obj.devices[key];
                 }
             }
-            // Process new data
             if (objName != undefined) {
-                this.processData();
+                // Process new data after update
+                this.processData(); 
             }
         });
 
@@ -283,7 +284,6 @@ class Traccar extends utils.Adapter {
         positions = responses[1].data;
         geofences = responses[2].data;
 
-        this.processData();
     }
 
     async getGeofencesState(geofenceIds) {
@@ -307,6 +307,7 @@ class Traccar extends utils.Adapter {
         const devicesState = [];
 
         if (this.serverVersion58) {
+
             for (const position of positions) {
                 if (position.geofenceIds) {
                     if (position.geofenceIds.includes(geofence.id)) {
