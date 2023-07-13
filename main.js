@@ -144,7 +144,9 @@ class Traccar extends utils.Adapter {
                 }
             }
             // Process new data
-            this.processData();
+            if (objName != undefined) {
+                this.processData();
+            }
         });
 
         // On Close
