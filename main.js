@@ -23,7 +23,6 @@ let pingTimeout;
 let autoRestartTimeout;
 const wsHeartbeatIntervall = 30000;
 const restartTimeout = 10000;
-let serverVersion58 = false;
 
 class Traccar extends utils.Adapter {
     /**
@@ -137,7 +136,7 @@ class Traccar extends utils.Adapter {
             else if (objName == 'devices') {
                 for (const key in obj.devices) {
                     const index = devices.findIndex((x) => x.id == obj.devices[key].id);
-                    if (index == -1) {9
+                    if (index == -1) {
                         await this.getTraccarDataOverAPI();
                         return;
                     }
@@ -146,7 +145,7 @@ class Traccar extends utils.Adapter {
             }
             if (objName != undefined) {
                 // Process new data after update
-                this.processData(); 
+                this.processData();
             }
         });
 
@@ -194,6 +193,7 @@ class Traccar extends utils.Adapter {
 
     async processData() {
         // Process devices
+        let serverVersion58;
         this.setObjectAndState('devices', 'devices');
         for (const device of devices) {
             const position = positions.find((p) => p.deviceId === device.id);
@@ -205,7 +205,7 @@ class Traccar extends utils.Adapter {
             this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
             // Server < v5.8
             if (device.geofenceIds) {
-                this.serverVersion58 = false;
+                serverVersion58 = false;
                 const deviceGeofencesState = await this.getGeofencesState(device.geofenceIds);
                 this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
                 this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(deviceGeofencesState));
@@ -223,7 +223,7 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
                 // Server >= v5.8
                 if (position.geofenceIds) {
-                    this.serverVersion58 = true;
+                    serverVersion58 = true;
                     const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
                     this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
                     this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
@@ -249,7 +249,7 @@ class Traccar extends utils.Adapter {
         for (const geofence of geofences) {
             const stateBaseID = `geofences.${geofence.id}`;
             // Create static datapoins
-            const geoDeviceState = this.getGeoDeviceState(geofence);
+            const geoDeviceState = this.getGeoDeviceState(geofence, serverVersion58);
             this.setObjectAndState('geofences.geofence', stateBaseID, geofence.name);
             this.setObjectAndState('geofences.geofence.geofence_name', `${stateBaseID}.geofence_name`, null, geofence.name);
             this.setObjectAndState('geofences.geofence.device_ids', `${stateBaseID}.device_ids`, null, JSON.stringify(geoDeviceState[0]));
@@ -302,17 +302,15 @@ class Traccar extends utils.Adapter {
         return geofencesState;
     }
 
-    getGeoDeviceState(geofence) {
+    getGeoDeviceState(geofence, serverVersion58) {
         const deviceIdsState = [];
         const devicesState = [];
-
-        if (this.serverVersion58) {
-
+        if (serverVersion58 == true) {
             for (const position of positions) {
                 if (position.geofenceIds) {
                     if (position.geofenceIds.includes(geofence.id)) {
                         deviceIdsState.push(position.deviceId);
-                        let found = devices.find(({ id }) => id === position.deviceId);
+                        const found = devices.find(({ id }) => id === position.deviceId);
                         devicesState.push(found.name);
                     }
                 }
