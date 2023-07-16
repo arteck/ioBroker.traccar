@@ -59,6 +59,7 @@ class Traccar extends utils.Adapter {
             await this.authUser();
             // Get initial traccar data over HTTP-API
             await this.getTraccarDataOverAPI();
+            this.processData();  // first try
             // Connect websocket
             this.initWebsocket();
         } catch (error) {
@@ -142,8 +143,10 @@ class Traccar extends utils.Adapter {
                     devices[index] = obj.devices[key];
                 }
             }
-            // Process new data
-            this.processData();
+            if (objName != undefined) {
+                // Process new data after update
+                this.processData();
+            }
         });
 
         // On Close
@@ -190,6 +193,7 @@ class Traccar extends utils.Adapter {
 
     async processData() {
         // Process devices
+        let serverVersion58;
         this.setObjectAndState('devices', 'devices');
         for (const device of devices) {
             const position = positions.find((p) => p.deviceId === device.id);
@@ -201,6 +205,7 @@ class Traccar extends utils.Adapter {
             this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
             // Server < v5.8
             if (device.geofenceIds) {
+                serverVersion58 = false;
                 const deviceGeofencesState = await this.getGeofencesState(device.geofenceIds);
                 this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
                 this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(deviceGeofencesState));
@@ -218,6 +223,7 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
                 // Server >= v5.8
                 if (position.geofenceIds) {
+                    serverVersion58 = true;
                     const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
                     this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
                     this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
@@ -236,21 +242,23 @@ class Traccar extends utils.Adapter {
                 this.log.debug('============== Process attributes end =================');
             }
         }
-        // Clean positions;
-        positions = [];
+
 
         // Process geofences
         this.setObjectAndState('geofences', 'geofences');
         for (const geofence of geofences) {
             const stateBaseID = `geofences.${geofence.id}`;
             // Create static datapoins
-            const geoDeviceState = this.getGeoDeviceState(geofence);
+            const geoDeviceState = this.getGeoDeviceState(geofence, serverVersion58);
             this.setObjectAndState('geofences.geofence', stateBaseID, geofence.name);
             this.setObjectAndState('geofences.geofence.geofence_name', `${stateBaseID}.geofence_name`, null, geofence.name);
             this.setObjectAndState('geofences.geofence.device_ids', `${stateBaseID}.device_ids`, null, JSON.stringify(geoDeviceState[0]));
             this.setObjectAndState('geofences.geofence.devices', `${stateBaseID}.devices`, null, JSON.stringify(geoDeviceState[1]));
             this.setObjectAndState('geofences.geofence.devices_string', `${stateBaseID}.devices_string`, null, geoDeviceState[1].join(', '));
         }
+
+        // Clean positions;
+        positions = [];
     }
 
     /**
@@ -276,7 +284,6 @@ class Traccar extends utils.Adapter {
         positions = responses[1].data;
         geofences = responses[2].data;
 
-        this.processData();
     }
 
     async getGeofencesState(geofenceIds) {
@@ -295,17 +302,31 @@ class Traccar extends utils.Adapter {
         return geofencesState;
     }
 
-    getGeoDeviceState(geofence) {
+    getGeoDeviceState(geofence, serverVersion58) {
         const deviceIdsState = [];
         const devicesState = [];
-        for (const device of devices) {
-            if (device.geofenceIds) {
-                if (device.geofenceIds.includes(geofence.id)) {
-                    deviceIdsState.push(device.id);
-                    devicesState.push(device.name);
+        if (serverVersion58 == true) {
+            for (const position of positions) {
+                if (position.geofenceIds) {
+                    if (position.geofenceIds.includes(geofence.id)) {
+                        deviceIdsState.push(position.deviceId);
+                        const found = devices.find(({ id }) => id === position.deviceId);
+                        devicesState.push(found.name);
+                    }
+                }
+            }
+        } else {
+            for (const device of devices) {
+                if (device.geofenceIds) {
+                    if (device.geofenceIds.includes(geofence.id)) {
+                        deviceIdsState.push(device.id);
+                        devicesState.push(device.name);
+                    }
                 }
             }
         }
+
+
         return [deviceIdsState, devicesState];
     }
 
