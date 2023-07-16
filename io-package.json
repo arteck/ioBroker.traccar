@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "news": {
+      "1.1.2": {
+        "en": "another fix for Traccar Server >= v5.8",
+        "de": "ein weiteres Fix für Traccar Server >= 5.8",
+        "ru": "другое исправление для Traccar Server >= в5.8",
+        "pt": "outra correção para o Traccar Server >= V5.8",
+        "nl": "nog een oplossing voor Traccar Server V5.8",
+        "fr": "un autre correctif pour Traccar Server v5.8",
+        "it": "un'altra correzione per Traccar Server >= V5.8",
+        "es": "otro arreglo para Traccar Server >= v5.8",
+        "pl": "innym rozwiązaniem dla usług Traccar Server >==== v5,8",
+        "uk": "ще одна фіксація для Traccar Server >= в5.8",
+        "zh-cn": "追踪服务者的另一个缺陷 第5.8条"
+      },
       "1.1.1": {
         "en": "fix translation",
         "de": "bersetzung",
@@ -80,19 +93,6 @@
         "pl": "napraw tłumaczenie",
         "zh-cn": "修复翻译",
         "uk": "виправити переклад"
-      },
-      "0.0.10": {
-        "en": "change UI to JSONConfig",
-        "de": "Ändern Sie die Benutzeroberfläche in JSONConfig",
-        "ru": "изменить пользовательский интерфейс на JSONConfig",
-        "pt": "alterar a IU para JSONConfig",
-        "nl": "verander gebruikersinterface in JSONConfig",
-        "fr": "changer l'interface utilisateur en JSONConfig",
-        "it": "cambia l'interfaccia utente in JSONConfig",
-        "es": "cambiar la interfaz de usuario a JSONConfig",
-        "pl": "zmień interfejs użytkownika na JSONConfig",
-        "zh-cn": "将 UI 更改为 JSONConfig",
-        "uk": "змінити інтерфейс користувача на JSONConfig"
       }
     },
     "title": "Traccar",
