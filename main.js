@@ -193,7 +193,7 @@ class Traccar extends utils.Adapter {
 
     async processData() {
         // Process devices
-        let serverVersion58;
+        let serverVersion58 = false;
         this.setObjectAndState('devices', 'devices');
         for (const device of devices) {
             const position = positions.find((p) => p.deviceId === device.id);
@@ -205,7 +205,6 @@ class Traccar extends utils.Adapter {
             this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
             // Server < v5.8
             if (device.geofenceIds) {
-                serverVersion58 = false;
                 const deviceGeofencesState = await this.getGeofencesState(device.geofenceIds);
                 this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(device.geofenceIds));
                 this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(deviceGeofencesState));
@@ -224,11 +223,17 @@ class Traccar extends utils.Adapter {
                 // Server >= v5.8
                 if (position.geofenceIds) {
                     serverVersion58 = true;
+                    this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, '[]');
+                    this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, '[]');
+                    this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, '');
+
                     const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
+                    
                     this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
                     this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
                     this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, positionGeofencesState.join(', '));
                 }
+
                 // Address is optional
                 if (position.address) {
                     this.setObjectAndState('devices.device.address', `${stateBaseID}.address`, null, position.address);
