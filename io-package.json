@@ -95,7 +95,6 @@
         "uk": "виправити переклад"
       }
     },
-    "title": "Traccar",
     "titleLang": {
       "en": "Traccar",
       "de": "Traccar",
@@ -175,7 +174,11 @@
     "main": "main.js",
     "icon": "traccar.png",
     "enabled": false,
-    "localLink": "http://%traccarIp%:%traccarPort%",
+    "localLinks": {
+      "_default": {
+        "link": "http://%traccarIp%:%traccarPort%"
+      }
+    },
     "extIcon": "https://raw.githubusercontent.com/o0shojo0o/ioBroker.traccar/master/admin/traccar.png",
     "readme": "https://github.com/o0shojo0o/ioBroker.traccar/blob/master/README.md",
     "loglevel": "info",
