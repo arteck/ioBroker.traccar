@@ -18,6 +18,7 @@ let ws;
 let devices;
 let positions;
 let geofences;
+let geofencesNow = [];
 let ping;
 let pingTimeout;
 let autoRestartTimeout;
@@ -128,12 +129,16 @@ class Traccar extends utils.Adapter {
             const obj = JSON.parse(message);
             const objName = Object.keys(obj)[0];
 
+            // Clean positions;
+            positions = [];
+
             // Position message
             if (objName == 'positions') {
                 positions = obj.positions;
+                await this.processPosition();
             }
             // Device message
-            else if (objName == 'devices') {
+           if (objName == 'devices') {
                 for (const key in obj.devices) {
                     const index = devices.findIndex((x) => x.id == obj.devices[key].id);
                     if (index == -1) {
@@ -142,11 +147,9 @@ class Traccar extends utils.Adapter {
                     }
                     devices[index] = obj.devices[key];
                 }
+               await this.processData();
             }
-            if (objName != undefined) {
-                // Process new data after update
-                this.processData();
-            }
+
         });
 
         // On Close
@@ -193,16 +196,18 @@ class Traccar extends utils.Adapter {
 
     async processData() {
         // Process devices
-        let serverVersion58 = false;
+
         this.setObjectAndState('devices', 'devices');
+
         for (const device of devices) {
-            const position = positions.find((p) => p.deviceId === device.id);
             const stateBaseID = `devices.${device.id}`;
             // Create static datapoins
             this.setObjectAndState('devices.device', stateBaseID, device.name);
             this.setObjectAndState('devices.device.device_name', `${stateBaseID}.device_name`, null, device.name);
             this.setObjectAndState('devices.device.status', `${stateBaseID}.status`, null, device.status);
-            this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, device.lastUpdate);
+            this.setObjectAndState('devices.device.last_update_from_server', `${stateBaseID}.last_update_from_server`, null, device.lastUpdate);
+            this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, Number(Date.now()));
+
             // Server < v5.8
             if (device.geofenceIds) {
                 const deviceGeofencesState = await this.getGeofencesState(device.geofenceIds);
@@ -210,60 +215,70 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(deviceGeofencesState));
                 this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, deviceGeofencesState.join(', '));
             }
-            // Check if a position was found
-            if (position) {
-                // Create static datapoins
-                this.setObjectAndState('devices.device.altitude', `${stateBaseID}.altitude`, null, Number(parseFloat(position.altitude).toFixed(1)));
-                this.setObjectAndState('devices.device.course', `${stateBaseID}.course`, null, position.course);
-                this.setObjectAndState('devices.device.latitude', `${stateBaseID}.latitude`, null, position.latitude);
-                this.setObjectAndState('devices.device.longitude', `${stateBaseID}.longitude`, null, position.longitude);
-                this.setObjectAndState('devices.device.position', `${stateBaseID}.position`, null, `${position.latitude},${position.longitude}`);
-                this.setObjectAndState('devices.device.position_url', `${stateBaseID}.position_url`, null, `https://maps.google.com/maps?z=15&t=m&q=loc:${position.latitude}+${position.longitude}`);
-                this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
-                // Server >= v5.8
-                if (position.geofenceIds) {
-                    serverVersion58 = true;
-                    this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, '[]');
-                    this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, '[]');
-                    this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, '');
+        }
+        await this.processGeofences();
+    }
 
-                    const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
-                    
-                    this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, JSON.stringify(position.geofenceIds));
-                    this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
-                    this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, positionGeofencesState.join(', '));
-                }
+    async processPosition() {
+  //      const position = positions.find((p) => p.deviceId === device.id);
 
-                // Address is optional
-                if (position.address) {
-                    this.setObjectAndState('devices.device.address', `${stateBaseID}.address`, null, position.address);
-                }
+        for (const position of positions) {
+            const stateBaseID = `devices.${position.deviceId}`;
+            // Create static datapoins
+            this.setObjectAndState('devices.device.altitude', `${stateBaseID}.altitude`, null, Number(parseFloat(position.altitude).toFixed(1)));
+            this.setObjectAndState('devices.device.course', `${stateBaseID}.course`, null, position.course);
+            this.setObjectAndState('devices.device.latitude', `${stateBaseID}.latitude`, null, position.latitude);
+            this.setObjectAndState('devices.device.longitude', `${stateBaseID}.longitude`, null, position.longitude);
+            this.setObjectAndState('devices.device.position', `${stateBaseID}.position`, null, `${position.latitude},${position.longitude}`);
+            this.setObjectAndState('devices.device.position_url', `${stateBaseID}.position_url`, null, `https://maps.google.com/maps?z=15&t=m&q=loc:${position.latitude}+${position.longitude}`);
+            this.setObjectAndState('devices.device.speed', `${stateBaseID}.speed`, null, Number(Number(position.speed).toFixed()));
+            this.setObjectAndState('devices.device.outdated', `${stateBaseID}.outdated`, null, position.outdated);
+            this.setObjectAndState('devices.device.last_update', `${stateBaseID}.last_update`, null, Number(Date.now()));
+            // Server >= v5.8
+            let geofenceIds = '';
+            if (position.geofenceIds) {
+                const positionGeofencesState = await this.getGeofencesState(position.geofenceIds);
+                geofenceIds = JSON.stringify(position.geofenceIds);
 
-                // Create dynamic datapoints for attributes
-                this.log.debug('============= Process attributes start ================');
-                for (const key in position.attributes) {
-                    await this.createObjectAndState(device, position.attributes, key);
-                }
-                this.log.debug('============== Process attributes end =================');
+                this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, geofenceIds);
+                this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, JSON.stringify(positionGeofencesState));
+                this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, positionGeofencesState.join(', '));
+            } else {
+                this.setObjectAndState('devices.device.geofence_ids', `${stateBaseID}.geofence_ids`, null, '[]');
+                this.setObjectAndState('devices.device.geofences', `${stateBaseID}.geofences`, null, '[]');
+                this.setObjectAndState('devices.device.geofences_string', `${stateBaseID}.geofences_string`, null, '');
+            }
+
+            geofencesNow[position.deviceId] = geofenceIds;
+
+            // Address is optional
+            if (position.address) {
+                this.setObjectAndState('devices.device.address', `${stateBaseID}.address`, null, position.address);
+            }
+
+            // Create dynamic datapoints for attributes
+            for (const key in position.attributes) {
+                await this.createObjectAndState(position.deviceId, position.attributes, key);
             }
         }
+        await this.processGeofences();
+    }
 
 
+    async processGeofences() {
         // Process geofences
         this.setObjectAndState('geofences', 'geofences');
         for (const geofence of geofences) {
             const stateBaseID = `geofences.${geofence.id}`;
             // Create static datapoins
-            const geoDeviceState = this.getGeoDeviceState(geofence, serverVersion58);
+            const geoDeviceState = this.getGeoDeviceState(geofence,  this.config.server58);
             this.setObjectAndState('geofences.geofence', stateBaseID, geofence.name);
             this.setObjectAndState('geofences.geofence.geofence_name', `${stateBaseID}.geofence_name`, null, geofence.name);
             this.setObjectAndState('geofences.geofence.device_ids', `${stateBaseID}.device_ids`, null, JSON.stringify(geoDeviceState[0]));
             this.setObjectAndState('geofences.geofence.devices', `${stateBaseID}.devices`, null, JSON.stringify(geoDeviceState[1]));
             this.setObjectAndState('geofences.geofence.devices_string', `${stateBaseID}.devices_string`, null, geoDeviceState[1].join(', '));
+            this.setObjectAndState('geofences.geofence.last_update', `${stateBaseID}.last_update`, null, Number(Date.now()));
         }
-
-        // Clean positions;
-        positions = [];
     }
 
     /**
@@ -289,6 +304,10 @@ class Traccar extends utils.Adapter {
         positions = responses[1].data;
         geofences = responses[2].data;
 
+
+
+      //  const server = await axios.all([axios.get(`${baseUrl}/server`, axiosOptions), axios.get(`${baseUrl}/positions`, axiosOptions), axios.get(`${baseUrl}/geofences`, axiosOptions)]);
+
     }
 
     async getGeofencesState(geofenceIds) {
@@ -308,6 +327,34 @@ class Traccar extends utils.Adapter {
     }
 
     getGeoDeviceState(geofence, serverVersion58) {
+        const deviceIdsState = [];
+        const devicesState = [];
+        if (serverVersion58 == true) {
+            for (let i = 0; i < geofencesNow.length; i++) {
+                if (geofencesNow[i] != null) {
+                    if (geofencesNow[i].includes(geofence.id)) {
+                        deviceIdsState.push(i);
+                        const found = devices.find(({id}) => id === i);
+                        devicesState.push(found.name);
+                    }
+                }
+            }
+        } else {
+            for (const device of devices) {
+                if (device.geofenceIds) {
+                    if (device.geofenceIds.includes(geofence.id)) {
+                        deviceIdsState.push(device.id);
+                        devicesState.push(device.name);
+                    }
+                }
+            }
+        }
+
+
+        return [deviceIdsState, devicesState];
+    }
+
+    getGeoDeviceStateold(geofence, serverVersion58) {
         const deviceIdsState = [];
         const devicesState = [];
         if (serverVersion58 == true) {
@@ -335,12 +382,12 @@ class Traccar extends utils.Adapter {
         return [deviceIdsState, devicesState];
     }
 
-    async createObjectAndState(device, obj, key) {
+    async createObjectAndState(deviceId, obj, key) {
         let val = obj[key];
         if (typeof val === 'object' && !Array.isArray(val)) {
             for (const objKey in val) {
                 const objVal = val[objKey];
-                const stateID = `devices.${device.id}.${this.formatName(objKey)}`;
+                const stateID = `devices.${deviceId}.${this.formatName(objKey)}`;
                 const objID = `devices.device.${this.formatName(objKey)}`;
                 this.log.debug(`objID: ${objID}, val: ${objVal}`);
                 if (!objKey[0].match(/[A-z]/i)) {
@@ -349,7 +396,7 @@ class Traccar extends utils.Adapter {
                 this.setObjectAndState(objID, stateID, this.formatStateName(objKey), objVal);
             }
         } else {
-            const stateID = `devices.${device.id}.${this.formatName(key)}`;
+            const stateID = `devices.${deviceId}.${this.formatName(key)}`;
             const objID = `devices.device.${this.formatName(key)}`;
             this.log.debug(`objID: ${objID}, val: ${val}`);
             if (Array.isArray(val)) {

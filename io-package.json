@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "news": {
+      "1.1.3": {
+        "en": "geofances fix for Server >= 5.8 (check adapter Settings)",
+        "de": "geofances fix für Server >= 5.8 (Adaptereinstellungen überprüfen)",
+        "ru": "geofances fix for Server >= 5.8 (проверка настроек адаптера)",
+        "pt": "correção geofances para Server >= 5.8 (configurações do adaptador de verificação)",
+        "nl": "geofances voor Server 5.8",
+        "fr": "geofances fix pour Server ACIA= 5.8 (vérifiez les paramètres de l'adaptateur)",
+        "it": "geofances fix per Server >= 5.8 (check adapter Settings)",
+        "es": "geofances fijado para Server >= 5.8 (ver configuración del adaptador)",
+        "pl": "geofances fix for Server >= 5.8 (ang.)",
+        "uk": "налаштування геофансів для сервера >= 5.8 (настройки адаптера)",
+        "zh-cn": "提供服务的场地=5.8"
+      },
       "1.1.2": {
         "en": "another fix for Traccar Server >= v5.8",
         "de": "ein weiteres Fix für Traccar Server >= 5.8",
@@ -80,19 +93,6 @@
         "pl": "naprawa Id nominable\ndatapoint Status",
         "zh-cn": "f 固定地缘故 我现在宣布无效\n增加数据点",
         "uk": "виправлено ідентифікатори геозон, які тепер обнуляються\nдодати стан точки даних пристрою"
-      },
-      "0.0.11": {
-        "en": "fix translation",
-        "de": "Übersetzung korrigieren",
-        "ru": "исправить перевод",
-        "pt": "corrigir tradução",
-        "nl": "vertaling repareren",
-        "fr": "corriger la traduction",
-        "it": "correggere la traduzione",
-        "es": "arreglar traducción",
-        "pl": "napraw tłumaczenie",
-        "zh-cn": "修复翻译",
-        "uk": "виправити переклад"
       }
     },
     "titleLang": {

@@ -46,6 +46,14 @@
             "sm": 12,
             "md": 8,
             "lg": 6
+        },
+        "server58": {
+            "newLine": true,
+            "type": "checkbox",
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "label": "Server Version > 5.7"
         }
     }
 }
