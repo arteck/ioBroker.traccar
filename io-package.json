@@ -163,7 +163,8 @@
       }
     ],
     "authors": [
-      "Dennis Rathjen <info@bastelbunker.de>"
+      "Dennis Rathjen <info@bastelbunker.de>",
+      "arteck <arteck@outlook.com>",
     ],
     "keywords": [
       "gps",
@@ -179,8 +180,8 @@
         "link": "http://%traccarIp%:%traccarPort%"
       }
     },
-    "extIcon": "https://raw.githubusercontent.com/o0shojo0o/ioBroker.traccar/master/admin/traccar.png",
-    "readme": "https://github.com/o0shojo0o/ioBroker.traccar/blob/master/README.md",
+    "extIcon": "https://raw.githubusercontent.com/arteck/ioBroker.traccar/master/admin/traccar.png",
+    "readme": "https://github.com/arteck/ioBroker.traccar/blob/master/README.md",
     "loglevel": "info",
     "mode": "daemon",
     "type": "geoposition",
