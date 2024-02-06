@@ -187,8 +187,7 @@
     "type": "geoposition",
     "compact": true,
     "connectionType": "local",
-    "dataSource": "push",
-    "materialize": true,
+    "dataSource": "push",    
     "dependencies": [
       {
         "js-controller": ">=3.1.0"
@@ -200,7 +199,9 @@
       }
     ],
     "adminUI": {
-      "config": "json"
+      "config": "json",    
+      "tab": "materialize"
+    },
     }
   },
   "native": {
