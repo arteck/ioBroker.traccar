@@ -201,7 +201,6 @@
     "adminUI": {
       "config": "json",    
       "tab": "materialize"
-    },
     }
   },
   "native": {
