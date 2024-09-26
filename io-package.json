@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "news": {
+      "1.1.5": {
+        "en": "transfer to arteck \nadd accuracy",
+        "de": "transfer zum arteck\ndie genauigkeit",
+        "ru": "перевод на арку\nточность",
+        "pt": "transferência para arteck\nadicionar precisão",
+        "nl": "transfer naar arteck\nnauwkeurigheid toevoegen",
+        "fr": "transfert à arteck\najouter la précision",
+        "it": "trasferimento ad arteck\naggiungere precisione",
+        "es": "transferencia a la arteria\nañadir precisión",
+        "pl": "przeniesienie do artecka\ndodać dokładność",
+        "uk": "передача до артека\nдодати точність",
+        "zh-cn": "转到arteck\n添加准确性"
+      },
       "1.1.4": {
         "en": "fix last_update DP",
         "de": "last_update DP",
@@ -80,19 +93,6 @@
         "pl": "obsługa",
         "uk": "виправити розгортання робочого процесу",
         "zh-cn": "f 部署工作流程"
-      },
-      "1.0.0": {
-        "en": "fix for Traccar Server v5.8",
-        "de": "fix für Traccar Server v5.8",
-        "ru": "фикс для Traccar Server v5.8",
-        "pt": "correção para Traccar Server v5.8",
-        "nl": "vertaling:",
-        "fr": "correction pour Traccar Server v5.8",
-        "it": "correzione per Traccar Server v5.8",
-        "es": "fijado para Traccar Server v5.8",
-        "pl": "zalecenia dla serwera Traccar v5.8",
-        "uk": "виправити для Traccar Server v5.8",
-        "zh-cn": "fix 追踪托儿所诉5.8"
       }
     },
     "titleLang": {
@@ -187,7 +187,7 @@
     "type": "geoposition",
     "compact": true,
     "connectionType": "local",
-    "dataSource": "push",    
+    "dataSource": "push",
     "dependencies": [
       {
         "js-controller": ">=3.1.0"
@@ -199,7 +199,7 @@
       }
     ],
     "adminUI": {
-      "config": "json",    
+      "config": "json",
       "tab": "materialize"
     }
   },

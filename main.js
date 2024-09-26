@@ -18,7 +18,7 @@ let ws;
 let devices;
 let positions;
 let geofences;
-let geofencesNow = [];
+const geofencesNow = [];
 let ping;
 let pingTimeout;
 let autoRestartTimeout;
@@ -138,7 +138,7 @@ class Traccar extends utils.Adapter {
                 await this.processPosition();
             }
             // Device message
-           if (objName == 'devices') {
+            if (objName == 'devices') {
                 for (const key in obj.devices) {
                     const index = devices.findIndex((x) => x.id == obj.devices[key].id);
                     if (index == -1) {
@@ -147,7 +147,7 @@ class Traccar extends utils.Adapter {
                     }
                     devices[index] = obj.devices[key];
                 }
-               await this.processData();
+                await this.processData();
             }
 
         });
@@ -220,12 +220,13 @@ class Traccar extends utils.Adapter {
     }
 
     async processPosition() {
-  //      const position = positions.find((p) => p.deviceId === device.id);
+        //      const position = positions.find((p) => p.deviceId === device.id);
 
         for (const position of positions) {
             const stateBaseID = `devices.${position.deviceId}`;
             // Create static datapoins
             this.setObjectAndState('devices.device.altitude', `${stateBaseID}.altitude`, null, Number(parseFloat(position.altitude).toFixed(1)));
+            this.setObjectAndState('devices.device.accuracy', `${stateBaseID}.accuracy`, null, Number(parseFloat(position.accuracy).toFixed(2)));
             this.setObjectAndState('devices.device.course', `${stateBaseID}.course`, null, position.course);
             this.setObjectAndState('devices.device.latitude', `${stateBaseID}.latitude`, null, position.latitude);
             this.setObjectAndState('devices.device.longitude', `${stateBaseID}.longitude`, null, position.longitude);
@@ -306,7 +307,7 @@ class Traccar extends utils.Adapter {
 
 
 
-      //  const server = await axios.all([axios.get(`${baseUrl}/server`, axiosOptions), axios.get(`${baseUrl}/positions`, axiosOptions), axios.get(`${baseUrl}/geofences`, axiosOptions)]);
+        //  const server = await axios.all([axios.get(`${baseUrl}/server`, axiosOptions), axios.get(`${baseUrl}/positions`, axiosOptions), axios.get(`${baseUrl}/geofences`, axiosOptions)]);
 
     }
 
