@@ -15,44 +15,59 @@
                     "label": "HTTPS",
                     "value": "https"
                 }
-            ]
+            ],
+            "xs": 12,
+            "sm": 12,
+            "md": 4,
+            "lg": 3,
+            "xl": 3
         },
         "traccarIp": {
             "type": "text",
             "label": "Server address",
+            "xs": 12,
             "sm": 12,
             "md": 4,
-            "lg": 3
+            "lg": 3,
+            "xl": 3
         },
         "traccarPort": {
             "type": "number",
             "label": "Port",
+            "xs": 12,
             "sm": 12,
             "md": 4,
-            "lg": 3
+            "lg": 3,
+            "xl": 3
         },
         "traccarUsername": {
             "newLine": true,
             "type": "text",
             "label": "Username",
+            "xs": 12,
             "sm": 12,
             "md": 4,
-            "lg": 3
+            "lg": 3,
+            "xl": 3
         },
         "traccarPassword": {
             "type": "password",
             "label": "Password",
             "repeat": true,
+            "xs": 12,
             "sm": 12,
             "md": 8,
-            "lg": 6
+            "lg": 6,
+            "xl": 6
         },
         "server58": {
             "newLine": true,
             "type": "checkbox",
+            "xs": 12,
             "sm": 12,
             "md": 6,
             "lg": 6,
+            "xl": 6,
             "label": "Server Version > 5.7"
         }
     }
