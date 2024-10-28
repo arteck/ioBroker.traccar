@@ -170,9 +170,11 @@
       "gps",
       "traccar"
     ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
+    "platform": "Javascript/Node.js",   
     "icon": "traccar.png",
     "enabled": false,
     "localLinks": {
@@ -190,7 +192,7 @@
     "dataSource": "push",
     "dependencies": [
       {
-        "js-controller": ">=3.1.0"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
