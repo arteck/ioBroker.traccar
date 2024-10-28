@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "news": {
+      "1.1.6": {
+        "en": "dependency update",
+        "de": "aktualisierung der abhängigkeit",
+        "ru": "обновление",
+        "pt": "atualização de dependência",
+        "nl": "afhankelijkheidsupdate",
+        "fr": "mise à jour de la dépendance",
+        "it": "aggiornamento della dipendenza",
+        "es": "actualización de la dependencia",
+        "pl": "aktualizacja zależności",
+        "uk": "оновлення залежності",
+        "zh-cn": "依赖性更新"
+      },
       "1.1.5": {
         "en": "transfer to arteck \nadd accuracy",
         "de": "transfer zum arteck\ndie genauigkeit",
@@ -80,19 +93,6 @@
         "pl": "obsługa połączeń https/ws\nrezultatem dla Traccar Server < v5.8",
         "uk": "підтримка підключення https/ws\nвиправити для Traccar Server < v5.8",
         "zh-cn": "支持网站/网络\nfix 托儿服务(< v5.8>)"
-      },
-      "1.0.1": {
-        "en": "fix deploy workflow",
-        "de": "fixer workflow",
-        "ru": "исправить развернутый рабочий процесс",
-        "pt": "corrigir o fluxo de trabalho de implantação",
-        "nl": "vertaling:",
-        "fr": "déploiement correct",
-        "it": "correzione del flusso di lavoro",
-        "es": "corriente de trabajo de despliegue fijo",
-        "pl": "obsługa",
-        "uk": "виправити розгортання робочого процесу",
-        "zh-cn": "f 部署工作流程"
       }
     },
     "titleLang": {
@@ -174,7 +174,7 @@
       "license": "MIT",
       "type": "free"
     },
-    "platform": "Javascript/Node.js",   
+    "platform": "Javascript/Node.js",
     "icon": "traccar.png",
     "enabled": false,
     "localLinks": {

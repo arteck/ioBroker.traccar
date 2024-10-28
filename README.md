@@ -24,16 +24,9 @@ This adapter imports in real time the position and the extended data from [Tracc
 5. Have fun :)
 
 ## Changelog
+### 1.1.6 (2024-10-28)
+-   (arteck) dependency update
 
-<!--
- https://github.com/AlCalzone/release-script#usage
-    npm run release major -- -p iobroker license --all 0.9.8 -> 1.0.0
-    npm run release minor -- -p iobroker license --all 0.9.8 -> 0.10.0
-    npm run release patch -- -p iobroker license --all 0.9.8 -> 0.9.9
-    npm run release prerelease beta -- -p iobroker license --all v0.2.1 -> v0.2.2-beta.0
-	Placeholder for the next version (at the beginning of the line):
-	
--->
 ### 1.1.5 (2024-09-26)
 -   (arteck) transfer to arteck 
 -   (arteck) add accuracy
