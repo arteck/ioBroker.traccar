@@ -113,6 +113,8 @@ This adapter imports in real time the position and the extended data from [Tracc
 
 -   (braindead1) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
