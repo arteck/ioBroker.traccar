@@ -54,6 +54,9 @@ class Traccar extends utils.Adapter {
             this.setState('info.connection', false, true);
             this.scheduleRestart();
         }
+
+        // Non-blocking version check – does not delay adapter startup
+        this.checkNewVersion().catch(() => {});
     }
 
     async onUnload(callback) {
@@ -62,6 +65,7 @@ class Traccar extends utils.Adapter {
             this.clearTimeout(this.ping);
             this.clearTimeout(this.pingTimeout);
             this.clearTimeout(this.autoRestartTimeout);
+            this.clearTimeout(this.versionCheckInterval);
             this.closeWebsocket();
             this.setState('info.connection', false, true);
         } finally {
@@ -120,6 +124,112 @@ class Traccar extends utils.Adapter {
         this.geofences = geoResp.data  ?? [];
 
         this.log.debug(`API loaded: ${this.devices.length} devices, ${this.positions.length} positions, ${this.geofences.length} geofences`);
+    }
+
+    /**
+     * Ermittelt die aktuelle Traccar-Server-Version (via /api/server) und
+     * vergleicht sie mit dem neuesten GitHub-Release.
+     *
+     * - Bei neuerer GitHub-Version: setState('info.newVersion', `<version>`, true)
+     * - Bei gleicher Version:       setState('info.newVersion', '', true)
+     * - Bei Fehlern:                Warn-Log, kein setState
+     */
+    async checkNewVersion() {
+        try {
+            const baseUrl = `${this.config.traccarScheme}://${this.config.traccarIp}:${this.config.traccarPort}`;
+
+            // 1) Lokale Traccar-Server-Version abrufen
+            let localVersion = null;
+            try {
+                const serverResp = await axios.get(`${baseUrl}/api/server`, {
+                    auth: {
+                        username: this.config.traccarUsername,
+                        password: this.config.traccarPassword,
+                    },
+                    timeout: 30000,
+                });
+                // Traccar liefert z.B. { ..., version: "5.12" }
+                if (serverResp.data && serverResp.data.version) {
+                    localVersion = serverResp.data.version;
+                    this.log.debug(`Traccar server version: ${localVersion}`);
+                }
+            } catch (err) {
+                this.log.debug(`Could not fetch local Traccar server version: ${err.message}`);
+            }
+
+            // 2) Neueste GitHub-Release-Version abrufen
+            let githubVersion = null;
+            try {
+                const ghResp = await axios.get(
+                    'https://api.github.com/repos/traccar/traccar/releases/latest',
+                    {
+                        headers: { 'User-Agent': 'ioBroker.traccar' },
+                        timeout: 30000,
+                    },
+                );
+                // GitHub-Tag: z.B. "v5.12" oder "5.12"
+                if (ghResp.data && ghResp.data.tag_name) {
+                    githubVersion = ghResp.data.tag_name.replace(/^v/, '');
+                    this.log.debug(`Latest GitHub version: ${githubVersion}`);
+                }
+            } catch (err) {
+                this.log.warn(`Could not fetch GitHub releases: ${err.message}`);
+            }
+
+            // 3) Vergleichen
+            if (!githubVersion) {
+                // Kein GitHub-Ergebnis → nichts tun
+                return;
+            }
+
+            if (!localVersion) {
+                // Lokale Version unbekannt, aber GH-Version existiert → trotzdem melden
+                this.setState('info.newVersion', githubVersion, true);
+                this.log.info(`New Traccar version available on GitHub: ${githubVersion}`);
+                return;
+            }
+
+            if (this._isVersionNewer(githubVersion, localVersion)) {
+                this.setState('info.newVersion', githubVersion, true);
+                this.log.info(`New Traccar version available on GitHub: ${githubVersion} (installed: ${localVersion})`);
+            } else {
+                this.setState('info.newVersion', '', true);
+                this.log.debug(`Traccar is up-to-date (installed: ${localVersion}, latest: ${githubVersion})`);
+            }
+        } catch (err) {
+            this.log.warn(`Version check failed: ${err.message}`);
+        } finally {
+            // Nächsten Check in 24 Stunden einplanen
+            this.versionCheckInterval = this.setTimeout(() => {
+                this.checkNewVersion().catch(() => {});
+            }, 86400000);
+        }
+    }
+
+    /**
+     * Semver-ähnlicher Vergleich: Gibt true zurück wenn a > b.
+     * Behandelt Strings wie "5.12", "5.12.0", "6.0" etc.
+     *
+     * @param {string} a
+     * @param {string} b
+     * @returns {boolean}
+     */
+    _isVersionNewer(a, b) {
+        const aParts = a.split('.').map(Number);
+        const bParts = b.split('.').map(Number);
+        const maxLen = Math.max(aParts.length, bParts.length);
+
+        for (let i = 0; i < maxLen; i++) {
+            const aNum = aParts[i] || 0;
+            const bNum = bParts[i] || 0;
+            if (aNum > bNum) {
+                return true;
+            }
+            if (aNum < bNum) {
+                return false;
+            }
+        }
+        return false; // equal
     }
 
     // ─── WebSocket ────────────────────────────────────────────────────────────

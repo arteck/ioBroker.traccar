@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "news": {
+      "1.2.1": {
+        "en": "+ (copilot) Adapter requires node.js >= 22 now\n* add version check re-runs every 24 hours\n* Dependencies have been updated",
+        "de": "+ (Copilot) Der Adapter benötigt jetzt Node.js >= 22.\n* Füge hinzu, dass die Versionsprüfung alle 24 Stunden erneut ausgeführt wird.\n* Abhängigkeiten wurden aktualisiert",
+        "ru": "+ (copilot) Адаптер теперь требует Node.js >= 22\n* Добавлена функция повторного запуска проверки версии каждые 24 часа.\n* Зависимости обновлены",
+        "pt": "+ (copiloto) O adaptador agora requer node.js >= 22.\n* Adicionar nova verificação de versão a cada 24 horas\n* As dependências foram atualizadas",
+        "nl": "+ (copilot) Adapter vereist nu node.js >= 22\n* De versiecontrole wordt elke 24 uur opnieuw uitgevoerd.\n* Afhankelijkheden zijn bijgewerkt",
+        "fr": "+ (copilote) L'adaptateur requiert désormais Node.js >= 22\n* Ajout d'une vérification de version exécutée toutes les 24 heures\nLes dépendances ont été mises à jour.",
+        "it": "+ (copilota) L'adattatore richiede node.js >= 22 ora\n* aggiungi il controllo della versione ogni 24 ore\n* Le dipendenze sono state aggiornate",
+        "es": "+ (copiloto) El adaptador ahora requiere node.js >= 22\n* Agregar comprobaciones de versión cada 24 horas\n* Las dependencias se han actualizado",
+        "pl": "+ (drugi pilot) Adapter wymaga teraz node.js >= 22\n* dodano ponowne uruchamianie kontroli wersji co 24 godziny\n* Zależności zostały zaktualizowane",
+        "uk": "+ (copilot) Адаптер тепер вимагає node.js >= 22\n* додати повторну перевірку версії кожні 24 години\n* Залежності оновлено",
+        "zh-cn": "+（副驾驶）适配器现在需要 node.js >= 22\n* 添加版本检查，每 24 小时重新运行一次\n* 依赖项已更新"
+      },
       "1.2.0": {
         "en": "refactoring",
         "de": "refaktor",
@@ -80,19 +93,6 @@
         "pl": "geofances fix for Server >= 5.8 (ang.)",
         "uk": "налаштування геофансів для сервера >= 5.8 (настройки адаптера)",
         "zh-cn": "提供服务的场地=5.8"
-      },
-      "1.1.2": {
-        "en": "another fix for Traccar Server >= v5.8",
-        "de": "ein weiteres Fix für Traccar Server >= 5.8",
-        "ru": "другое исправление для Traccar Server >= в5.8",
-        "pt": "outra correção para o Traccar Server >= V5.8",
-        "nl": "nog een oplossing voor Traccar Server V5.8",
-        "fr": "un autre correctif pour Traccar Server v5.8",
-        "it": "un'altra correzione per Traccar Server >= V5.8",
-        "es": "otro arreglo para Traccar Server >= v5.8",
-        "pl": "innym rozwiązaniem dla usług Traccar Server >==== v5,8",
-        "uk": "ще одна фіксація для Traccar Server >= в5.8",
-        "zh-cn": "追踪服务者的另一个缺陷 第5.8条"
       }
     },
     "titleLang": {
@@ -240,6 +240,19 @@
         "read": true,
         "write": false,
         "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.newVersion",
+      "type": "state",
+      "common": {
+        "role": "value.info",
+        "name": "New version available on GitHub",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
       },
       "native": {}
     }
