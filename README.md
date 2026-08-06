@@ -23,6 +23,9 @@ This adapter imports in real time the position and the extended data from [Tracc
 5. Have fun :)
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 1.2.0 (2026-04-23)
 * (arteck) refactoring
 
