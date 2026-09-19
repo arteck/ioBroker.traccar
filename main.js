@@ -2,8 +2,12 @@
 
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
+const https = require('https');
 const WebSocket = require('ws');
 const defObj = require('./lib/object_definitions').defObj;
+
+// FIX: explicit TLS verification, independent of NODE_TLS_REJECT_UNAUTHORIZED/global axios config
+const HTTPS_AGENT = new https.Agent({ rejectUnauthorized: true });
 
 const WS_HEARTBEAT_INTERVAL = 30000;
 const WS_RESTART_TIMEOUT    = 10000;
@@ -86,6 +90,7 @@ class Traccar extends utils.Adapter {
             {
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 timeout: AXIOS_TIMEOUT,  // FIX: Timeout hinzugefügt
+                httpsAgent: HTTPS_AGENT, // FIX: explizite TLS-Zertifikatsprüfung
             },
         );
 
@@ -110,6 +115,7 @@ class Traccar extends utils.Adapter {
                 password: this.config.traccarPassword,
             },
             timeout: AXIOS_TIMEOUT,   // FIX: Timeout hinzugefügt
+            httpsAgent: HTTPS_AGENT,  // FIX: explizite TLS-Zertifikatsprüfung
         };
 
         // FIX: Promise.all statt deprecated axios.all
