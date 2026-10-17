@@ -6,20 +6,20 @@ const helpers = require('./lib/adapter_helpers');
 describe('Traccar adapter helpers', () => {
     it('matches geofence and device IDs exactly across number/string types', () => {
         const devices = [
-            { id: 1, name: 'First' },
-            { id: 11, name: 'Eleventh' },
+            { id: 1, name: 'First', geofenceIds: [11] },
+            { id: 11, name: 'Eleventh', geofenceIds: [11] },
             { id: 12, name: 'Twelfth', geofenceIds: [11] },
         ];
         const geofencesNow = new Map([
             ['1', new Set(['11'])],
-            ['11', new Set(['11'])],
+            ['12', new Set(['1'])],
         ]);
 
-        expect(helpers.getGeoDeviceState({ id: 1 }, true, devices, geofencesNow)).to.deep.equal([[], []]);
+        expect(helpers.getGeoDeviceState({ id: 1 }, true, devices, geofencesNow)).to.deep.equal([[12], ['Twelfth']]);
         expect(helpers.getGeoDeviceState({ id: '11' }, true, devices, geofencesNow))
-            .to.deep.equal([[1, 11, 12], ['First', 'Eleventh', 'Twelfth']]);
-        expect(helpers.getGeoDeviceState({ id: '11' }, false, [{ ...devices[0], geofenceIds: [11] }], new Map()))
             .to.deep.equal([[1], ['First']]);
+        expect(helpers.getGeoDeviceState({ id: '11' }, false, devices, geofencesNow))
+            .to.deep.equal([[1, 11, 12], ['First', 'Eleventh', 'Twelfth']]);
     });
 
     it('retries unknown geofence IDs once and leaves them identifiable', async () => {
