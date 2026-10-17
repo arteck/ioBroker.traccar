@@ -1,84 +1,102 @@
 {
-    "type": "panel",
-    "i18n": true,
-    "items": {
+  "type": "panel",
+  "i18n": true,
+  "items": {
+    "_tab_Start": {
+      "type": "panel",
+      "label": "Main Settings",
+      "items": {
+        "header_Start": {
+          "type": "header",
+          "text": "Welcome to the Traccar adapter",
+          "size": 2
+        },
         "traccarScheme": {
-            "newLine": true,
-            "type": "select",
-            "label": "Scheme",
-            "options": [
-                {
-                    "label": "HTTP",
-                    "value": "http"
-                },
-                {
-                    "label": "HTTPS",
-                    "value": "https"
-                }
-            ],
-            "xs": 12,
-            "sm": 12,
-            "md": 4,
-            "lg": 3,
-            "xl": 3
+          "newLine": true,
+          "type": "select",
+          "label": "Scheme",
+          "options": [
+            {
+              "label": "HTTP",
+              "value": "http"
+            },
+            {
+              "label": "HTTPS",
+              "value": "https"
+            }
+          ],
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
         },
         "traccarIp": {
-            "type": "text",
-            "label": "Server address",
-            "xs": 12,
-            "sm": 12,
-            "md": 4,
-            "lg": 3,
-            "xl": 3
+          "type": "text",
+          "label": "Server address",
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
         },
         "traccarPort": {
-            "type": "number",
-            "label": "Port",
-            "xs": 12,
-            "sm": 12,
-            "md": 4,
-            "lg": 3,
-            "xl": 3
+          "type": "number",
+          "label": "Port",
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
         },
         "traccarUsername": {
-            "newLine": true,
-            "type": "text",
-            "label": "Username",
-            "xs": 12,
-            "sm": 12,
-            "md": 4,
-            "lg": 3,
-            "xl": 3
+          "newLine": true,
+          "type": "text",
+          "label": "Username",
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
         },
         "traccarPassword": {
-            "type": "password",
-            "label": "Password",
-            "repeat": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 8,
-            "lg": 6,
-            "xl": 6
+          "type": "password",
+          "label": "Password",
+          "repeat": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 8,
+          "lg": 6,
+          "xl": 6
+        },
+        "connectionHeader": {
+          "type": "header",
+          "text": "Connection settings",
+          "size": 2,
+          "newLine": true
         },
         "updateInterval": {
-            "newLine": true,
-            "type": "number",
-            "label": "Update interval",
-            "min": 10,
-            "xs": 12,
-            "sm": 12,
-            "md": 4,
-            "lg": 3,
-            "xl": 3
+          "newLine": true,
+          "type": "number",
+          "label": "Update interval",
+          "min": 10,
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 3,
+          "xl": 3
         },
         "server58": {
-            "type": "checkbox",
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 6,
-            "xl": 6,
-            "label": "Server Version > 5.7"
+          "newLine": true,
+          "type": "checkbox",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6,
+          "label": "Server Version > 5.7"
         }
+      }
     }
+  }
 }

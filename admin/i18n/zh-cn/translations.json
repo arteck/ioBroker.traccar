@@ -1,7 +1,14 @@
 {
     "Password": "密码",
     "Port": "端口",
-    "Server adress": "服务器地址",
+    "Main Settings": "主要设置",
+    "Welcome to the Traccar adapter": "欢迎使用 Traccar 适配器",
+    "Scheme": "协议",
+    "Server address": "服务器地址",
+    "HTTP": "HTTP",
+    "HTTPS": "HTTPS",
+    "Connection settings": "连接设置",
+    "Server Version > 5.7": "服务器版本 > 5.7",
     "Update": "更新",
     "Update interval": "更新间隔",
     "Username": "用户名"

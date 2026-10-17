@@ -1,7 +1,14 @@
 {
     "Password": "Wachtwoord",
     "Port": "Haven",
-    "Server adress": "Server adres",
+    "Main Settings": "Hoofdinstellingen",
+    "Welcome to the Traccar adapter": "Welkom bij de Traccar-adapter",
+    "Scheme": "Schema",
+    "Server address": "Serveradres",
+    "HTTP": "HTTP",
+    "HTTPS": "HTTPS",
+    "Connection settings": "Verbindingsinstellingen",
+    "Server Version > 5.7": "Serverversie > 5.7",
     "Update": "Bijwerken",
     "Update interval": "Bijwerkingsonderbreking",
     "Username": "Gebruikersnaam"

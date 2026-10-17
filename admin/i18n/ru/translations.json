@@ -1,7 +1,14 @@
 {
     "Password": "Пароль",
     "Port": "Порт",
-    "Server adress": "Адрес сервера",
+    "Main Settings": "Основные настройки",
+    "Welcome to the Traccar adapter": "Добро пожаловать в адаптер Traccar",
+    "Scheme": "Схема",
+    "Server address": "Адрес сервера",
+    "HTTP": "HTTP",
+    "HTTPS": "HTTPS",
+    "Connection settings": "Настройки подключения",
+    "Server Version > 5.7": "Версия сервера > 5.7",
     "Update": "Обновлять",
     "Update interval": "Интервал обновления",
     "Username": "Имя пользователя"
