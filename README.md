@@ -26,11 +26,10 @@ The update interval is specified in seconds (default: 120). The adapter also
 continues to process live updates received through the Traccar WebSocket.
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 1.2.2 (2026-10-17)
 * (arteck) Dependencies have been updated
 * (arteck) add geofence state
-* (arteck) auto server version identification 
+* (arteck) auto server version identification
 
 ### 1.2.1 (2026-08-06)
 + (copilot) Adapter requires node.js >= 22 now
@@ -45,10 +44,6 @@ continues to process live updates received through the Traccar WebSocket.
 
 ### 1.1.6 (2024-10-28)
 -   (arteck) dependency update
-
-### 1.1.5 (2024-09-26)
--   (arteck) transfer to arteck 
--   (arteck) add accuracy
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
