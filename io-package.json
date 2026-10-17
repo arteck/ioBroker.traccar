@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "news": {
+      "1.2.3": {
+        "en": "fix geofence device list",
+        "de": "Fix Geofence Geräteliste",
+        "ru": "исправить список геозонных устройств",
+        "pt": "fix Geofence Device List",
+        "nl": "lijst met geofence-apparaten repareren",
+        "fr": "fix Geofence Device List",
+        "it": "fix geofence device list",
+        "es": "fijar lista de geofence",
+        "pl": "naprawić listę urządzeń geofence",
+        "uk": "виправлення списку пристроїв географії",
+        "zh-cn": "修复地理围栏设备列表"
+      },
       "1.2.2": {
         "en": "Dependencies have been updated\nadd geofence state\nauto server version identification",
         "de": "Abhängigkeiten wurden aktualisiert\nGeofence State hinzufügen\nAutomatische Serverversionserkennung",
@@ -80,19 +93,6 @@
         "pl": "przeniesienie do artecka\ndodać dokładność",
         "uk": "передача до артека\nдодати точність",
         "zh-cn": "转到arteck\n添加准确性"
-      },
-      "1.1.4": {
-        "en": "fix last_update DP",
-        "de": "last_update DP",
-        "ru": "исправить last_update DP",
-        "pt": "corrigir último_update DP",
-        "nl": "vertaling:",
-        "fr": "fix last_update DP",
-        "it": "correzione last_update DP",
-        "es": "fijar último_actualizar DP",
-        "pl": "naprawa DP",
-        "uk": "fix last_update ДП",
-        "zh-cn": "fix DP最新情况"
       }
     },
     "titleLang": {
