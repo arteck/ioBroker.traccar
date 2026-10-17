@@ -1,15 +1,16 @@
 {
-    "Password": "密码",
-    "Port": "端口",
-    "Main Settings": "主要设置",
-    "Welcome to the Traccar adapter": "欢迎使用 Traccar 适配器",
-    "Scheme": "协议",
-    "Server address": "服务器地址",
+    "Connection settings": "连接设置",
     "HTTP": "HTTP",
     "HTTPS": "HTTPS",
-    "Connection settings": "连接设置",
-    "Server Version > 5.7": "服务器版本 > 5.7",
+    "Interval in seconds to update the device data from the Traccar server. The minimum value is 10 seconds.": "从 Traccar 服务器更新设备数据的间隔（秒）。最小值为 10 秒。",
+    "Main Settings": "主要设置",
+    "Password": "密码",
+    "Port": "端口",
+    "Scheme": "协议",
+    "Server address": "服务器地址",
     "Update": "更新",
     "Update interval": "更新间隔",
-    "Username": "用户名"
+    "Update interval (seconds)": "更新间隔（秒）",
+    "Username": "用户名",
+    "Welcome to the Traccar adapter": "欢迎使用 Traccar 适配器"
 }

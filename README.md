@@ -30,6 +30,7 @@ continues to process live updates received through the Traccar WebSocket.
 ### **WORK IN PROGRESS**
 * (arteck) Dependencies have been updated
 * (arteck) add geofence state
+* (arteck) auto server version identification 
 
 ### 1.2.1 (2026-08-06)
 + (copilot) Adapter requires node.js >= 22 now

@@ -1,15 +1,16 @@
 {
-    "Password": "Пароль",
-    "Port": "Порт",
-    "Main Settings": "Основные настройки",
-    "Welcome to the Traccar adapter": "Добро пожаловать в адаптер Traccar",
-    "Scheme": "Схема",
-    "Server address": "Адрес сервера",
+    "Connection settings": "Настройки подключения",
     "HTTP": "HTTP",
     "HTTPS": "HTTPS",
-    "Connection settings": "Настройки подключения",
-    "Server Version > 5.7": "Версия сервера > 5.7",
+    "Interval in seconds to update the device data from the Traccar server. The minimum value is 10 seconds.": "Интервал в секундах для обновления данных устройств с сервера Traccar. Минимум — 10 секунд.",
+    "Main Settings": "Основные настройки",
+    "Password": "Пароль",
+    "Port": "Порт",
+    "Scheme": "Схема",
+    "Server address": "Адрес сервера",
     "Update": "Обновлять",
     "Update interval": "Интервал обновления",
-    "Username": "Имя пользователя"
+    "Update interval (seconds)": "Интервал обновления (секунды)",
+    "Username": "Имя пользователя",
+    "Welcome to the Traccar adapter": "Добро пожаловать в адаптер Traccar"
 }

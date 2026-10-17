@@ -78,23 +78,14 @@
         "updateInterval": {
           "newLine": true,
           "type": "number",
-          "label": "Update interval",
+          "label": "Update interval (seconds)",
+          "help": "Interval in seconds to update the device data from the Traccar server. The minimum value is 10 seconds.",
           "min": 10,
           "xs": 12,
           "sm": 12,
           "md": 4,
           "lg": 3,
           "xl": 3
-        },
-        "server58": {
-          "newLine": true,
-          "type": "checkbox",
-          "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 6,
-          "xl": 6,
-          "label": "Server Version > 5.7"
         }
       }
     }

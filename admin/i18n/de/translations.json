@@ -1,15 +1,16 @@
 {
-    "Password": "Passwort",
-    "Port": "Port",
-    "Main Settings": "Haupteinstellungen",
-    "Welcome to the Traccar adapter": "Willkommen beim Traccar-Adapter",
-    "Scheme": "Schema",
-    "Server address": "Serveradresse",
+    "Connection settings": "Verbindungseinstellungen",
     "HTTP": "HTTP",
     "HTTPS": "HTTPS",
-    "Connection settings": "Verbindungseinstellungen",
-    "Server Version > 5.7": "Serverversion > 5.7",
+    "Interval in seconds to update the device data from the Traccar server. The minimum value is 10 seconds.": "Intervall in Sekunden, in dem Gerätedaten vom Traccar-Server abgerufen werden. Mindestens 10 Sekunden.",
+    "Main Settings": "Haupteinstellungen",
+    "Password": "Passwort",
+    "Port": "Port",
+    "Scheme": "Schema",
+    "Server address": "Serveradresse",
     "Update": "Aktualisieren",
     "Update interval": "Aktualisierungsintervall",
-    "Username": "Benutzername"
+    "Update interval (seconds)": "Aktualisierungsintervall (Sekunden)",
+    "Username": "Benutzername",
+    "Welcome to the Traccar adapter": "Willkommen beim Traccar-Adapter"
 }

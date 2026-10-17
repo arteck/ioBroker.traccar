@@ -31,6 +31,8 @@ class Traccar extends utils.Adapter {
         this.positions       = [];
         this.geofences       = [];
         this.geofencesNow    = new Map();
+        this.serverVersion   = null;
+        this.serverVersion58 = null;
         this.ping            = null;
         this.pingTimeout     = null;
         this.autoRestartTimeout = null;
@@ -58,6 +60,7 @@ class Traccar extends utils.Adapter {
 
         try {
             await this.authUser();
+            await this.refreshServerVersion();
             await this.getTraccarDataOverAPI();
             this.updateGeofenceCacheFromPositions(this.positions, true);
             await this.processData();
@@ -195,8 +198,45 @@ class Traccar extends utils.Adapter {
         this.devices   = devResp.data  ?? [];
         this.positions = posResp.data  ?? [];
         this.geofences = geoResp.data  ?? [];
+        this.detectGeofenceModeFromData();
 
         this.log.debug(`API loaded: ${this.devices.length} devices, ${this.positions.length} positions, ${this.geofences.length} geofences`);
+    }
+
+    async refreshServerVersion() {
+        try {
+            const serverResp = await axios.get(`${this.getServerUrl()}/api/server`, {
+                auth: {
+                    username: this.config.traccarUsername,
+                    password: this.config.traccarPassword,
+                },
+                timeout: AXIOS_TIMEOUT,
+            });
+            const version = serverResp.data?.version;
+            const usesPositionGeofences = helpers.getServerVersion58(version);
+            if (usesPositionGeofences === null) {
+                this.log.warn(`Traccar server returned an unrecognized version: ${version ?? '(missing)'}.`);
+                return null;
+            }
+            this.serverVersion = version;
+            this.serverVersion58 = usesPositionGeofences;
+            this.log.info(`Detected Traccar server version ${version}; geofence data is read from ${usesPositionGeofences ? 'positions' : 'devices'}.`);
+            return version;
+        } catch (error) {
+            this.log.debug(`Could not detect Traccar server version: ${error.message}`);
+            return null;
+        }
+    }
+
+    detectGeofenceModeFromData() {
+        if (this.serverVersion58 !== null) {
+            return;
+        }
+        const detectedMode = helpers.detectServerVersion58(this.devices, this.positions);
+        if (detectedMode !== null) {
+            this.serverVersion58 = detectedMode;
+            this.log.info(`Detected geofence data in ${detectedMode ? 'positions' : 'devices'} from the Traccar API response.`);
+        }
     }
 
     /**
@@ -209,26 +249,7 @@ class Traccar extends utils.Adapter {
      */
     async checkNewVersion() {
         try {
-            const baseUrl = this.getServerUrl();
-
-            // 1) Lokale Traccar-Server-Version abrufen
-            let localVersion = null;
-            try {
-                const serverResp = await axios.get(`${baseUrl}/api/server`, {
-                    auth: {
-                        username: this.config.traccarUsername,
-                        password: this.config.traccarPassword,
-                    },
-                    timeout: 30000,
-                });
-                // Traccar liefert z.B. { ..., version: "5.12" }
-                if (serverResp.data && serverResp.data.version) {
-                    localVersion = serverResp.data.version;
-                    this.log.debug(`Traccar server version: ${localVersion}`);
-                }
-            } catch (err) {
-                this.log.debug(`Could not fetch local Traccar server version: ${err.message}`);
-            }
+            const localVersion = this.serverVersion ?? await this.refreshServerVersion();
 
             // 2) Neueste GitHub-Release-Version abrufen
             let githubVersion = null;
@@ -273,6 +294,7 @@ class Traccar extends utils.Adapter {
             // Nächsten Check in 24 Stunden einplanen
             if (!this.unloading) {
                 this.versionCheckInterval = this.setTimeout(() => {
+                    this.serverVersion = null;
                     this.checkNewVersion();
                 }, 86400000);
             }
@@ -316,6 +338,7 @@ class Traccar extends utils.Adapter {
                 if (objName === 'positions') {
                     // FIX: nur bei tatsächlicher Position-Nachricht leeren
                     this.positions = Array.isArray(obj.positions) ? obj.positions : [];
+                    this.detectGeofenceModeFromData();
                     this.updateGeofenceCacheFromPositions(this.positions);
                     await this.processPosition();
                 } else if (objName === 'devices') {
@@ -329,6 +352,7 @@ class Traccar extends utils.Adapter {
                         }
                         this.devices[index] = updatedDevice;
                     }
+                    this.detectGeofenceModeFromData();
                     await this.processData(false);
                 }
             } catch (err) {
@@ -399,6 +423,7 @@ this.ws.terminate();
             }
             try {
                 await this.authUser();
+                await this.refreshServerVersion();
                 await this.getTraccarDataOverAPI();
                 if (this.unloading) {
                     return;
@@ -531,7 +556,7 @@ this.ws.terminate();
 
         for (const geofence of this.geofences) {
             const baseId       = `geofences.${geofence.id}`;
-            const geoDevState  = this.getGeoDeviceState(geofence, this.config.server58);
+            const geoDevState  = this.getGeoDeviceState(geofence, this.serverVersion58);
 
             await this.setObjectAndState('geofences.geofence',                baseId,                          geofence.name);
             await this.setObjectAndState('geofences.geofence.geofence_name',  `${baseId}.geofence_name`,  null, geofence.name);

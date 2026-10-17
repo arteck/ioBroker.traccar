@@ -77,4 +77,15 @@ describe('Traccar adapter helpers', () => {
         expect(helpers.isVersionNewer('6.0.0', '6')).to.equal(false);
         expect(helpers.isVersionNewer('unknown', '6.0')).to.equal(false);
     });
+
+    it('selects geofence source from Traccar version and detects it from API data as fallback', () => {
+        expect(helpers.getServerVersion58('5.7')).to.equal(false);
+        expect(helpers.getServerVersion58('5.8')).to.equal(true);
+        expect(helpers.getServerVersion58('6.0.1')).to.equal(true);
+        expect(helpers.getServerVersion58('unknown')).to.equal(null);
+
+        expect(helpers.detectServerVersion58([], [{ geofenceIds: [] }])).to.equal(true);
+        expect(helpers.detectServerVersion58([{ geofenceIds: [] }], [])).to.equal(false);
+        expect(helpers.detectServerVersion58([], [])).to.equal(null);
+    });
 });

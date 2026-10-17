@@ -1,15 +1,16 @@
 {
-    "Password": "Wachtwoord",
-    "Port": "Haven",
-    "Main Settings": "Hoofdinstellingen",
-    "Welcome to the Traccar adapter": "Welkom bij de Traccar-adapter",
-    "Scheme": "Schema",
-    "Server address": "Serveradres",
+    "Connection settings": "Verbindingsinstellingen",
     "HTTP": "HTTP",
     "HTTPS": "HTTPS",
-    "Connection settings": "Verbindingsinstellingen",
-    "Server Version > 5.7": "Serverversie > 5.7",
+    "Interval in seconds to update the device data from the Traccar server. The minimum value is 10 seconds.": "Interval in seconden voor het bijwerken van apparaatgegevens vanaf de Traccar-server. Het minimum is 10 seconden.",
+    "Main Settings": "Hoofdinstellingen",
+    "Password": "Wachtwoord",
+    "Port": "Haven",
+    "Scheme": "Schema",
+    "Server address": "Serveradres",
     "Update": "Bijwerken",
     "Update interval": "Bijwerkingsonderbreking",
-    "Username": "Gebruikersnaam"
+    "Update interval (seconds)": "Update-interval (seconden)",
+    "Username": "Gebruikersnaam",
+    "Welcome to the Traccar adapter": "Welkom bij de Traccar-adapter"
 }
