@@ -4,10 +4,15 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios').default;
 const WebSocket = require('ws');
 const defObj = require('./lib/object_definitions').defObj;
+const helpers = require('./lib/adapter_helpers');
 
 const WS_HEARTBEAT_INTERVAL = 30000;
 const WS_RESTART_TIMEOUT    = 10000;
+const WS_RESTART_MAX_TIMEOUT = 300000;
 const AXIOS_TIMEOUT          = 15000;
+const DEFAULT_UPDATE_INTERVAL = 120;
+const MIN_UPDATE_INTERVAL = 10;
+const MAX_UPDATE_INTERVAL = 86400;
 
 class Traccar extends utils.Adapter {
     /**
@@ -25,10 +30,13 @@ class Traccar extends utils.Adapter {
         this.devices         = [];
         this.positions       = [];
         this.geofences       = [];
-        this.geofencesNow    = [];   // indexed by deviceId
+        this.geofencesNow    = new Map();
         this.ping            = null;
         this.pingTimeout     = null;
         this.autoRestartTimeout = null;
+        this.updateTimeout  = null;
+        this.reconnectAttempts = 0;
+        this.unloading      = false;
 
         this.on('ready',  this.onReady.bind(this));
         this.on('unload', this.onUnload.bind(this));
@@ -44,11 +52,18 @@ class Traccar extends utils.Adapter {
         this.log.debug(`Username: ${this.config.traccarUsername}`);
         this.log.debug(`Password: ${this.config.traccarPassword ? '**********' : '(not set)'}`);
 
+        if (!this.validateConfig()) {
+            return;
+        }
+
         try {
             await this.authUser();
             await this.getTraccarDataOverAPI();
-            await this.processData();         // FIX: await hinzugefügt
+            this.updateGeofenceCacheFromPositions(this.positions, true);
+            await this.processData();
+            await this.processPosition();
             this.initWebsocket();
+            this.scheduleUpdate();
         } catch (error) {
             this.log.warn(`Server is offline or the address is incorrect: ${error.message}`);
             this.setState('info.connection', false, true);
@@ -56,21 +71,79 @@ class Traccar extends utils.Adapter {
         }
 
         // Non-blocking version check – does not delay adapter startup
-        this.checkNewVersion().catch(() => {});
+        this.checkNewVersion();
     }
 
     async onUnload(callback) {
+        this.unloading = true;
         try {
             // FIX: konsistent this.clearTimeout nutzen
             this.clearTimeout(this.ping);
             this.clearTimeout(this.pingTimeout);
             this.clearTimeout(this.autoRestartTimeout);
+            this.clearTimeout(this.updateTimeout);
             this.clearTimeout(this.versionCheckInterval);
             this.closeWebsocket();
             this.setState('info.connection', false, true);
         } finally {
             callback();
         }
+    }
+
+    validateConfig() {
+        const { traccarScheme, traccarIp, traccarPort } = this.config;
+        if (!helpers.isValidServerConfig(traccarScheme, traccarIp, traccarPort)) {
+            this.log.error('Invalid Traccar server configuration; check scheme, address and port.');
+            return false;
+        }
+        return true;
+    }
+
+    getUpdateIntervalMs() {
+        const interval = helpers.getUpdateIntervalMs(
+            this.config.updateInterval,
+            DEFAULT_UPDATE_INTERVAL,
+            MIN_UPDATE_INTERVAL,
+            MAX_UPDATE_INTERVAL,
+        );
+        if (interval === null) {
+            this.log.warn(`Invalid update interval; using ${DEFAULT_UPDATE_INTERVAL} seconds.`);
+            return DEFAULT_UPDATE_INTERVAL * 1000;
+        }
+        return interval;
+    }
+
+    getServerUrl() {
+        const host = this.config.traccarIp.includes(':') && !this.config.traccarIp.startsWith('[')
+            ? `[${this.config.traccarIp}]`
+            : this.config.traccarIp;
+        return `${this.config.traccarScheme}://${host}:${this.config.traccarPort}`;
+    }
+
+    scheduleUpdate() {
+        this.clearTimeout(this.updateTimeout);
+        if (this.unloading) {
+            return;
+        }
+        this.updateTimeout = this.setTimeout(async () => {
+            this.updateTimeout = null;
+            if (this.unloading) {
+                return;
+            }
+            try {
+                await this.getTraccarDataOverAPI();
+                if (this.unloading) {
+                    return;
+                }
+                this.updateGeofenceCacheFromPositions(this.positions, true);
+                await this.processData();
+                await this.processPosition();
+            } catch (error) {
+                this.log.warn(`Scheduled Traccar update failed: ${error.message}`);
+            } finally {
+                this.scheduleUpdate();
+            }
+        }, this.getUpdateIntervalMs());
     }
 
     // ─── Auth & API ───────────────────────────────────────────────────────────
@@ -81,7 +154,7 @@ class Traccar extends utils.Adapter {
     async authUser() {
         const auth = `email=${encodeURIComponent(this.config.traccarUsername)}&password=${encodeURIComponent(this.config.traccarPassword)}`;
         const resp = await axios.post(
-            `${this.config.traccarScheme}://${this.config.traccarIp}:${this.config.traccarPort}/api/session`,
+            `${this.getServerUrl()}/api/session`,
             auth,
             {
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -103,7 +176,7 @@ class Traccar extends utils.Adapter {
      * FIX: Promise.all statt deprecated axios.all; Timeout ergänzt.
      */
     async getTraccarDataOverAPI() {
-        const baseUrl     = `${this.config.traccarScheme}://${this.config.traccarIp}:${this.config.traccarPort}/api`;
+        const baseUrl     = `${this.getServerUrl()}/api`;
         const axiosOpts   = {
             auth: {
                 username: this.config.traccarUsername,
@@ -136,7 +209,7 @@ class Traccar extends utils.Adapter {
      */
     async checkNewVersion() {
         try {
-            const baseUrl = `${this.config.traccarScheme}://${this.config.traccarIp}:${this.config.traccarPort}`;
+            const baseUrl = this.getServerUrl();
 
             // 1) Lokale Traccar-Server-Version abrufen
             let localVersion = null;
@@ -183,9 +256,7 @@ class Traccar extends utils.Adapter {
             }
 
             if (!localVersion) {
-                // Lokale Version unbekannt, aber GH-Version existiert → trotzdem melden
-                this.setState('info.newVersion', githubVersion, true);
-                this.log.info(`New Traccar version available on GitHub: ${githubVersion}`);
+                this.log.warn('Traccar server version is unknown; skipping the update comparison.');
                 return;
             }
 
@@ -200,9 +271,11 @@ class Traccar extends utils.Adapter {
             this.log.warn(`Version check failed: ${err.message}`);
         } finally {
             // Nächsten Check in 24 Stunden einplanen
-            this.versionCheckInterval = this.setTimeout(() => {
-                this.checkNewVersion().catch(() => {});
-            }, 86400000);
+            if (!this.unloading) {
+                this.versionCheckInterval = this.setTimeout(() => {
+                    this.checkNewVersion();
+                }, 86400000);
+            }
         }
     }
 
@@ -215,36 +288,20 @@ class Traccar extends utils.Adapter {
      * @returns {boolean}
      */
     _isVersionNewer(a, b) {
-        const aParts = a.split('.').map(Number);
-        const bParts = b.split('.').map(Number);
-        const maxLen = Math.max(aParts.length, bParts.length);
-
-        for (let i = 0; i < maxLen; i++) {
-            const aNum = aParts[i] || 0;
-            const bNum = bParts[i] || 0;
-            if (aNum > bNum) {
-                return true;
-            }
-            if (aNum < bNum) {
-                return false;
-            }
-        }
-        return false; // equal
+        return helpers.isVersionNewer(a, b);
     }
 
     // ─── WebSocket ────────────────────────────────────────────────────────────
 
     initWebsocket() {
-        // FIX: geofencesNow vor jedem Reconnect zurücksetzen
-        this.geofencesNow = [];
-
         const scheme = this.config.traccarScheme === 'http' ? 'ws' : 'wss';
-        const url    = `${scheme}://${this.config.traccarIp}:${this.config.traccarPort}/api/socket`;
+        const url    = `${this.getServerUrl().replace(/^https?/, scheme)}/api/socket`;
 
         this.ws = new WebSocket(url, { headers: { Cookie: this.cookie } });
 
         this.ws.on('open', () => {
             this.log.info('Connected to Traccar server via WebSocket.');
+            this.reconnectAttempts = 0;
             this.setState('info.connection', true, true);
             this.sendPingToServer();
             this.wsHeartbeat();
@@ -258,7 +315,8 @@ class Traccar extends utils.Adapter {
 
                 if (objName === 'positions') {
                     // FIX: nur bei tatsächlicher Position-Nachricht leeren
-                    this.positions = obj.positions;
+                    this.positions = Array.isArray(obj.positions) ? obj.positions : [];
+                    this.updateGeofenceCacheFromPositions(this.positions);
                     await this.processPosition();
                 } else if (objName === 'devices') {
                     // FIX: for...of statt for...in über Array
@@ -271,7 +329,7 @@ class Traccar extends utils.Adapter {
                         }
                         this.devices[index] = updatedDevice;
                     }
-                    await this.processData();
+                    await this.processData(false);
                 }
             } catch (err) {
                 this.log.error(`Error processing WebSocket message: ${err.message}`);
@@ -328,18 +386,32 @@ this.ws.terminate();
      * Stattdessen wird nur ein neuer Connect-Versuch gestartet.
      */
     scheduleRestart() {
-        this.log.warn(`Reconnecting in ${WS_RESTART_TIMEOUT / 1000} seconds...`);
+        if (this.unloading || this.autoRestartTimeout) {
+            return;
+        }
+        const delay = helpers.getReconnectDelay(this.reconnectAttempts, WS_RESTART_TIMEOUT, WS_RESTART_MAX_TIMEOUT);
+        this.reconnectAttempts += 1;
+        this.log.warn(`Reconnecting in ${delay / 1000} seconds...`);
         this.autoRestartTimeout = this.setTimeout(async () => {
+            this.autoRestartTimeout = null;
+            if (this.unloading) {
+                return;
+            }
             try {
                 await this.authUser();
                 await this.getTraccarDataOverAPI();
+                if (this.unloading) {
+                    return;
+                }
+                this.updateGeofenceCacheFromPositions(this.positions, true);
                 await this.processData();
+                await this.processPosition();
                 this.initWebsocket();
             } catch (err) {
                 this.log.warn(`Reconnect failed: ${err.message}`);
                 this.scheduleRestart();
             }
-        }, WS_RESTART_TIMEOUT);
+        }, delay);
     }
 
     closeWebsocket() {
@@ -350,7 +422,7 @@ this.ws.terminate();
 
     // ─── Datenverarbeitung ────────────────────────────────────────────────────
 
-    async processData() {
+    async processData(cleanupStale = true) {
         if (!Array.isArray(this.devices)) {
             return;
         }
@@ -375,10 +447,13 @@ this.ws.terminate();
             }
         }
 
-        await this.processGeofences();
+        if (cleanupStale) {
+            await this.removeStaleObjects('devices', this.devices.map(({ id }) => id));
+        }
+        await this.processGeofences(cleanupStale);
     }
 
-    async processPosition() {
+    async processPosition(cleanupStale = false) {
         if (!Array.isArray(this.positions)) {
             return;
         }
@@ -386,28 +461,47 @@ this.ws.terminate();
         for (const position of this.positions) {
             const baseId = `devices.${position.deviceId}`;
 
-            await this.setObjectAndState('devices.device.altitude',    `${baseId}.altitude`,    null, Number(parseFloat(position.altitude).toFixed(1)));
-            await this.setObjectAndState('devices.device.accuracy',    `${baseId}.accuracy`,    null, Number(parseFloat(position.accuracy).toFixed(2)));
-            await this.setObjectAndState('devices.device.course',      `${baseId}.course`,      null, position.course);
-            await this.setObjectAndState('devices.device.latitude',    `${baseId}.latitude`,    null, position.latitude);
-            await this.setObjectAndState('devices.device.longitude',   `${baseId}.longitude`,   null, position.longitude);
-            await this.setObjectAndState('devices.device.position',    `${baseId}.position`,    null, `${position.latitude},${position.longitude}`);
-            await this.setObjectAndState('devices.device.position_url',`${baseId}.position_url`,null,
-                `https://maps.google.com/maps?z=15&t=m&q=loc:${position.latitude}+${position.longitude}`);
-            await this.setObjectAndState('devices.device.speed',       `${baseId}.speed`,       null, Number(Number(position.speed).toFixed()));
-            await this.setObjectAndState('devices.device.outdated',    `${baseId}.outdated`,    null, position.outdated);
+            const altitude = this.parseFiniteNumber(position.altitude, 'altitude', position.deviceId);
+            const accuracy = this.parseFiniteNumber(position.accuracy, 'accuracy', position.deviceId);
+            const course = this.parseFiniteNumber(position.course, 'course', position.deviceId);
+            const latitude = this.parseFiniteNumber(position.latitude, 'latitude', position.deviceId);
+            const longitude = this.parseFiniteNumber(position.longitude, 'longitude', position.deviceId);
+            const speed = this.parseFiniteNumber(position.speed, 'speed', position.deviceId);
+
+            if (altitude !== null) {
+                await this.setObjectAndState('devices.device.altitude', `${baseId}.altitude`, null, Number(altitude.toFixed(1)));
+            }
+            if (accuracy !== null) {
+                await this.setObjectAndState('devices.device.accuracy', `${baseId}.accuracy`, null, Number(accuracy.toFixed(2)));
+            }
+            if (course !== null) {
+                await this.setObjectAndState('devices.device.course', `${baseId}.course`, null, course);
+            }
+            if (latitude !== null && longitude !== null) {
+                await this.setObjectAndState('devices.device.latitude', `${baseId}.latitude`, null, latitude);
+                await this.setObjectAndState('devices.device.longitude', `${baseId}.longitude`, null, longitude);
+                await this.setObjectAndState('devices.device.position', `${baseId}.position`, null, `${latitude},${longitude}`);
+                await this.setObjectAndState('devices.device.position_url', `${baseId}.position_url`, null,
+                    `https://maps.google.com/maps?z=15&t=m&q=loc:${latitude}+${longitude}`);
+            }
+            if (speed !== null) {
+                await this.setObjectAndState('devices.device.speed', `${baseId}.speed`, null, Number(speed.toFixed()));
+            }
+            if (typeof position.outdated === 'boolean') {
+                await this.setObjectAndState('devices.device.outdated', `${baseId}.outdated`, null, position.outdated);
+            }
             await this.setObjectAndState('devices.device.last_update', `${baseId}.last_update`, null, Number(Date.now()));
 
             // Traccar >= v5.8: Geofences kommen von der Position
-            if (position.geofenceIds) {
+            if (Array.isArray(position.geofenceIds)) {
                 const names = await this.getGeofencesState(position.geofenceIds);
-                this.geofencesNow[position.deviceId] = JSON.stringify(position.geofenceIds);
+                this.geofencesNow.set(String(position.deviceId), new Set(position.geofenceIds.map(String)));
 
-                await this.setObjectAndState('devices.device.geofence_ids',     `${baseId}.geofence_ids`,     null, this.geofencesNow[position.deviceId]);
+                await this.setObjectAndState('devices.device.geofence_ids',     `${baseId}.geofence_ids`,     null, JSON.stringify(position.geofenceIds));
                 await this.setObjectAndState('devices.device.geofences',        `${baseId}.geofences`,        null, JSON.stringify(names));
                 await this.setObjectAndState('devices.device.geofences_string', `${baseId}.geofences_string`, null, names.join(', '));
             } else {
-                this.geofencesNow[position.deviceId] = '[]';
+                this.geofencesNow.set(String(position.deviceId), new Set());
                 await this.setObjectAndState('devices.device.geofence_ids',     `${baseId}.geofence_ids`,     null, '[]');
                 await this.setObjectAndState('devices.device.geofences',        `${baseId}.geofences`,        null, '[]');
                 await this.setObjectAndState('devices.device.geofences_string', `${baseId}.geofences_string`, null, '');
@@ -417,15 +511,18 @@ this.ws.terminate();
                 await this.setObjectAndState('devices.device.address', `${baseId}.address`, null, position.address);
             }
 
-            for (const key of Object.keys(position.attributes)) {
-                await this.createObjectAndState(position.deviceId, position.attributes, key);
+            if (position.attributes && typeof position.attributes === 'object' && !Array.isArray(position.attributes)) {
+                const usedAttributeNames = new Set();
+                for (const key of Object.keys(position.attributes)) {
+                    await this.createObjectAndState(position.deviceId, position.attributes, key, usedAttributeNames);
+                }
             }
         }
 
-        await this.processGeofences();
+        await this.processGeofences(cleanupStale);
     }
 
-    async processGeofences() {
+    async processGeofences(cleanupStale = true) {
         if (!Array.isArray(this.geofences)) {
             return;
         }
@@ -441,7 +538,11 @@ this.ws.terminate();
             await this.setObjectAndState('geofences.geofence.device_ids',     `${baseId}.device_ids`,     null, JSON.stringify(geoDevState[0]));
             await this.setObjectAndState('geofences.geofence.devices',        `${baseId}.devices`,        null, JSON.stringify(geoDevState[1]));
             await this.setObjectAndState('geofences.geofence.devices_string', `${baseId}.devices_string`, null, geoDevState[1].join(', '));
+            await this.setObjectAndState('geofences.geofence.occupation',     `${baseId}.occupation`,     null, geoDevState[0].length > 0);
             await this.setObjectAndState('geofences.geofence.last_update',    `${baseId}.last_update`,    null, Number(Date.now()));
+        }
+        if (cleanupStale) {
+            await this.removeStaleObjects('geofences', this.geofences.map(({ id }) => id));
         }
     }
 
@@ -455,28 +556,40 @@ this.ws.terminate();
      * @returns {Promise<string[]>}
      */
     async getGeofencesState(geofenceIds) {
-        if (!geofenceIds?.length) {
+        if (!Array.isArray(geofenceIds) || !geofenceIds.length) {
             return [];
         }
+        return helpers.resolveGeofenceNamesWithRetry(
+            geofenceIds,
+            this.geofences,
+            async () => {
+                await this.getTraccarDataOverAPI();
+                return this.geofences;
+            },
+            (id) => this.log.warn(`Unknown geofence ID ${id}; using its ID as the name.`),
+        );
+    }
 
-        let needsReload = false;
-
-        const names = geofenceIds.map((id) => {
-            const found = this.geofences.find((g) => g.id === id);
-            if (!found?.name) {
-                needsReload = true;
-                return null;
-            }
-            return found.name;
-        });
-
-        // FIX: nur einmal neu laden, nicht pro fehlendem Eintrag
-        if (needsReload) {
-            await this.getTraccarDataOverAPI();
-            return this.getGeofencesState(geofenceIds);   // retry nach Reload
+    updateGeofenceCacheFromPositions(positions, replace = false) {
+        if (replace) {
+            this.geofencesNow.clear();
         }
+        for (const position of positions ?? []) {
+            if (position?.deviceId === undefined || position?.deviceId === null) {
+                continue;
+            }
+            this.geofencesNow.set(String(position.deviceId), new Set(
+                Array.isArray(position.geofenceIds) ? position.geofenceIds.map(String) : [],
+            ));
+        }
+    }
 
-        return names;
+    parseFiniteNumber(value, field, deviceId) {
+        const number = helpers.parseFiniteNumber(value);
+        if (number === null && value !== null && value !== undefined && value !== '') {
+            this.log.warn(`Ignoring invalid ${field} value for device ${deviceId}: ${value}`);
+        }
+        return number;
     }
 
     /**
@@ -488,63 +601,52 @@ this.ws.terminate();
      * @returns {[number[], string[]]}
      */
     getGeoDeviceState(geofence, serverVersion58) {
-        const deviceIds  = [];
-        const deviceNames = [];
+        return helpers.getGeoDeviceState(geofence, serverVersion58, this.devices, this.geofencesNow);
+    }
 
-        if (serverVersion58) {
-            // >= v5.8: Geofences kommen von der Position
-            for (let i = 0; i < this.geofencesNow.length; i++) {
-                if (this.geofencesNow[i] != null && this.geofencesNow[i].includes(String(geofence.id))) {
-                    const found = this.devices.find(({ id }) => id === i);
-                    if (found) {
-                        deviceIds.push(i);
-                        deviceNames.push(found.name);
-                    }
-                }
-            }
-        } else {
-            // < v5.8: Geofences kommen vom Gerät
-            for (const device of this.devices) {
-                if (device.geofenceIds?.includes(geofence.id)) {
-                    deviceIds.push(device.id);
-                    deviceNames.push(device.name);
-                }
-            }
+    async removeStaleObjects(collection, currentIds) {
+        const prefix = `${this.namespace}.${collection}.`;
+        const result = await this.getObjectListAsync({
+            startkey: prefix,
+            endkey: `${prefix}\u9999`,
+        });
+        const staleChannels = helpers.getStaleChannelIds(result.rows, prefix, currentIds);
+        for (const id of staleChannels) {
+            await this.delObjectAsync(id, { recursive: true });
+            this.log.info(`Removed stale ${collection} object ${id}.`);
         }
-
-        return [deviceIds, deviceNames];
     }
 
     // ─── Objekt/State-Verwaltung ──────────────────────────────────────────────
 
-    async createObjectAndState(deviceId, obj, key) {
+    async createObjectAndState(deviceId, obj, key, usedNames = new Set()) {
         const val   = obj[key];
         const baseObjId   = `devices.device`;
         const baseStateId = `devices.${deviceId}`;
 
         if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
             for (const [objKey, objVal] of Object.entries(val)) {
-                if (!objKey[0].match(/[A-Za-z]/)) {
-                    this.log.warn(`Key "${objKey}" does not start with a letter – skipped.`);
+                if (!helpers.claimAttributeName(objKey, usedNames)) {
+                    this.log.warn(`Unsupported Traccar attribute name "${objKey}" – skipped.`);
                     continue;
                 }
                 await this.setObjectAndState(
                     `${baseObjId}.${this.formatName(objKey)}`,
                     `${baseStateId}.${this.formatName(objKey)}`,
                     this.formatStateName(objKey),
-                    objVal,
+                    helpers.serializeAttributeValue(objVal),
                 );
             }
         } else {
-            if (!key[0].match(/[A-Za-z]/)) {
-                this.log.warn(`Key "${key}" does not start with a letter – skipped.`);
+            if (!helpers.claimAttributeName(key, usedNames)) {
+                this.log.warn(`Unsupported Traccar attribute name "${key}" – skipped.`);
                 return;
             }
             await this.setObjectAndState(
                 `${baseObjId}.${this.formatName(key)}`,
                 `${baseStateId}.${this.formatName(key)}`,
                 this.formatStateName(key),
-                Array.isArray(val) ? JSON.stringify(val) : val,
+                helpers.serializeAttributeValue(val),
             );
         }
     }
@@ -614,7 +716,9 @@ this.ws.terminate();
 
 // FIX: module.parent ist deprecated seit Node 14 – require.main verwenden
 if (require.main !== module) {
-    module.exports = (options) => new Traccar(options);
+    const createAdapter = (options) => new Traccar(options);
+    createAdapter.Traccar = Traccar;
+    module.exports = createAdapter;
 } else {
     new Traccar();
 }

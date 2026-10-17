@@ -60,8 +60,18 @@
             "lg": 6,
             "xl": 6
         },
-        "server58": {
+        "updateInterval": {
             "newLine": true,
+            "type": "number",
+            "label": "Update interval",
+            "min": 10,
+            "xs": 12,
+            "sm": 12,
+            "md": 4,
+            "lg": 3,
+            "xl": 3
+        },
+        "server58": {
             "type": "checkbox",
             "xs": 12,
             "sm": 12,
