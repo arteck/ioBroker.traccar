@@ -1,21 +1,8 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.2.3",
+    "version": "1.2.2",
     "news": {
-      "1.2.3": {
-        "en": "fix geofence device list",
-        "de": "Fix Geofence Geräteliste",
-        "ru": "исправить список геозонных устройств",
-        "pt": "fix Geofence Device List",
-        "nl": "lijst met geofence-apparaten repareren",
-        "fr": "fix Geofence Device List",
-        "it": "fix geofence device list",
-        "es": "fijar lista de geofence",
-        "pl": "naprawić listę urządzeń geofence",
-        "uk": "виправлення списку пристроїв географії",
-        "zh-cn": "修复地理围栏设备列表"
-      },
       "1.2.2": {
         "en": "Dependencies have been updated\nadd geofence state\nauto server version identification",
         "de": "Abhängigkeiten wurden aktualisiert\nGeofence State hinzufügen\nAutomatische Serverversionserkennung",
