@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "traccar",
-    "version": "1.2.2",
+    "version": "1.2.4",
     "news": {
+      "1.2.4": {
+        "en": "fix geofence traccar version > 5.8 in some situations",
+        "de": "Geofence Traccar Version > 5.8 manchmal reparieren",
+        "ru": "исправить версию geofence traccar > 5.8 в некоторых ситуациях",
+        "pt": "corrija a versão do Geofence Traccar > 5.8 em alguns casos",
+        "nl": "geofence traccar versie > 5.8 repareren in sommige situaties",
+        "fr": "corriger la version 5.8 de Geofence Traccar dans certains cas",
+        "it": "aggiusta geofence traccar > 5.8 in alcuni casi",
+        "es": "arreglar la versión de geofence traccar > 5.8 en algunos casos",
+        "pl": "naprawić geofence traccar wersja > 5.8 w niektórych sytuacjach",
+        "uk": "виправлення версії Geofence Traccar > 5.8 в деяких ситуаціях",
+        "zh-cn": "在某些情况下修复 geofence traccar 版本 > 5.8 的问题"
+      },
       "1.2.2": {
         "en": "Dependencies have been updated\nadd geofence state\nauto server version identification",
         "de": "Abhängigkeiten wurden aktualisiert\nGeofence State hinzufügen\nAutomatische Serverversionserkennung",

@@ -463,8 +463,8 @@ this.ws.terminate();
             await this.setObjectAndState('devices.device.last_update_from_server',  `${baseId}.last_update_from_server`, null, device.lastUpdate);
             await this.setObjectAndState('devices.device.last_update',              `${baseId}.last_update`,        null, Number(Date.now()));
 
-            // Traccar < v5.8: Geofences kommen vom Gerät
-            if (device.geofenceIds) {
+            // Traccar < v5.8: Geofences kommen vom Gerät, ab v5.8 von der Position.
+            if (this.serverVersion58 !== true && device.geofenceIds) {
                 const names = await this.getGeofencesState(device.geofenceIds);
                 await this.setObjectAndState('devices.device.geofence_ids',    `${baseId}.geofence_ids`,    null, JSON.stringify(device.geofenceIds));
                 await this.setObjectAndState('devices.device.geofences',       `${baseId}.geofences`,       null, JSON.stringify(names));
